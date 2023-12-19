@@ -1,12 +1,35 @@
 import React from "react";
 import Navbar from "../../Components/NavBar/Navbar";
+import Searchbar from "../../Components/Searchbar/Searchbar";
+import Trendingdestination from "./Components/Trendingdestinations/Trendingdestinations";
+import { Grid } from '@mui/material';
 
 const Home: React.FC = () => {
-  return (
-    <div className="homePage container">
-      <Navbar />
-    </div>
-  );
+  const handleSearch = (searchParams: {
+    checkInDate: Date;
+    checkOutDate: Date;
+    adults: number;
+    children: number;
+    rooms: number;
+  }) => {
+    console.log("Search parameters:", searchParams);
+  };
+
+    return (
+      <div className="container">
+        <Navbar />
+        <Searchbar onSearch={handleSearch} />
+        <Grid container spacing={2}>
+          <Grid item xs={12} md={4}>
+            <Trendingdestination />
+          </Grid>
+        </Grid>
+      </div>
+    );
+  
 };
 
+
+
 export default Home;
+

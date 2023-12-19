@@ -17,8 +17,10 @@ const LoginForm: React.FC = () => {
     try {
       const response = await loginRequest(values);
       const authToken = response?.data?.authentication;
-      localStorage.setItem("authTokenn", authToken);
       const userType = response?.data?.userType;
+      localStorage.setItem("authTokenn", authToken);
+      localStorage.setItem("userType", userType);
+      
       if (userType === "Admin") {
         navigate("/Admin");
       } else {

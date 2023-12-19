@@ -34,17 +34,23 @@ const Searchbar: React.FC<SearchbarProps> = ({ onSearch }) => {
       sx={{
         backgroundColor: "white",
         marginTop: 5,
-        padding: 5,
+        padding:3,
         borderRadius: 5,
       }}
     >
       <Grid container spacing={2}>
-        <Grid item xs={12} onClick={toggleExpansion}>
+        <Grid item xs={10} onClick={toggleExpansion}>
           <TextField
             fullWidth
             label="Search for hotels, cities..."
             variant="outlined"
           />
+        
+        </Grid>
+        <Grid item xs={2}>
+          <Button variant="contained" color="primary" onClick={handleSearch} size="large">
+            Search
+          </Button>
         </Grid>
         {isExpanded && (
           <>
@@ -91,11 +97,7 @@ const Searchbar: React.FC<SearchbarProps> = ({ onSearch }) => {
             </Grid>
           </>
         )}
-        <Grid item xs={12}>
-          <Button variant="contained" color="primary" onClick={handleSearch}>
-            Search
-          </Button>
-        </Grid>
+      
       </Grid>
     </Container>
   );
