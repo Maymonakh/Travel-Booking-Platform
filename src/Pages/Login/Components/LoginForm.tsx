@@ -18,7 +18,7 @@ const LoginForm: React.FC = () => {
       const response = await loginRequest(values);
       const authToken = response?.data?.authentication;
       const userType = response?.data?.userType;
-      localStorage.setItem("authTokenn", authToken);
+      localStorage.setItem("authToken", authToken);
       localStorage.setItem("userType", userType);
       
       if (userType === "Admin") {

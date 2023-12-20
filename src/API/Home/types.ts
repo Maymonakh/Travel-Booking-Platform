@@ -9,6 +9,12 @@ export interface SearchRequestProps {
   children: number;
 }
 
+export interface amenities{
+    id: number;
+    name: string;
+    description: string;
+}
+
 export interface SearchResponse {
   hotelName: string;
   starRating: number;
@@ -19,14 +25,9 @@ export interface SearchResponse {
   cityName: string;
   roomPhotoUrl: string;
   discount: number;
-  amenities: [
-    {
-      id: number;
-      name: string;
-      description: string;
-    }
-  ];
+  amenities: amenities[];
 }
+
   
   export interface TrendingDestinationResponse {
     cityName: string;
@@ -45,6 +46,14 @@ export interface SearchResponse {
     title: string;
     description: string;
     roomPhotoUrl: string;
+  }
+
+  export interface VisitedHotelsResponse {
+    hotelName: string;
+    starRating: number;
+    visitDate: string;
+    cityName: string;
+    thumbnailUrl: string;
   }
   
 
