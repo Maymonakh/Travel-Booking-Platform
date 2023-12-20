@@ -6,11 +6,9 @@ import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import Menu from "@mui/material/Menu";
 import MenuIcon from "@mui/icons-material/Menu";
-import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
 import MenuItem from "@mui/material/MenuItem";
 import "./style.css";
-import useStyles from "./style";
 
 const pages = ["Home", "Search", "Checkout"];
 
@@ -70,7 +68,7 @@ const Navbar: React.FC = () => {
           >
             <MenuIcon />
           </IconButton>
-          
+
           <Menu
             id="menu-appbar"
             anchorEl={anchorElNav}
@@ -88,19 +86,13 @@ const Navbar: React.FC = () => {
             sx={{
               display: { xs: "block", md: "none" },
             }}
-
           >
             {pages.map((page) => (
               <MenuItem key={page} onClick={handleCloseNavMenu}>
-                <Typography
-                  textAlign="center"
-                >
-                  {page}
-                </Typography>
+                <Typography textAlign="center">{page}</Typography>
               </MenuItem>
             ))}
           </Menu>
-          
         </Box>
         <Typography
           variant="h5"

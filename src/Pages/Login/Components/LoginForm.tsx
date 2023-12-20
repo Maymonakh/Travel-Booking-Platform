@@ -20,7 +20,7 @@ const LoginForm: React.FC = () => {
       const userType = response?.data?.userType;
       localStorage.setItem("authToken", authToken);
       localStorage.setItem("userType", userType);
-      
+
       if (userType === "Admin") {
         navigate("/Admin");
       } else {

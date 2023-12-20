@@ -1,5 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Comfortaa&display=swap');
-
+@import url("https://fonts.googleapis.com/css2?family=Comfortaa&display=swap");
 
 body {
   background: linear-gradient(90deg, #4bb79c 0%, #182848 100%);
@@ -9,7 +8,7 @@ body {
   width: 360px;
   padding: 8% 0 0;
   margin: auto;
-  font-family: 'Comfortaa', cursive;
+  font-family: "Comfortaa", cursive;
 }
 
 .form {

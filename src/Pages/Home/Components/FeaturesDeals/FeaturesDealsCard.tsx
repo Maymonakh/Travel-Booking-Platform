@@ -1,11 +1,6 @@
 import React from "react";
 import Rating from "@mui/material/Rating";
-import {
-  Card,
-  CardContent,
-  CardMedia,
-  Typography,
-} from "@mui/material";
+import { Card, CardContent, CardMedia, Typography } from "@mui/material";
 import { FeaturesDealsResponse } from "../../../../API/Home/types";
 
 const FeaturesDealsCard = ({ data }: { data: FeaturesDealsResponse }) => {
@@ -21,8 +16,13 @@ const FeaturesDealsCard = ({ data }: { data: FeaturesDealsResponse }) => {
   } = data;
 
   return (
-    <Card >
-      <CardMedia component="img" alt={hotelName} height="140" image={roomPhotoUrl} />
+    <Card>
+      <CardMedia
+        component="img"
+        alt={hotelName}
+        height="140"
+        image={roomPhotoUrl}
+      />
       <CardContent>
         <div>
           <Typography variant="h6">{cityName}</Typography>

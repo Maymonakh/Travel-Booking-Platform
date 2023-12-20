@@ -1,16 +1,15 @@
-
 .toolBar {
-    background-color:var(--white-color);
-    color: var(--blue-color);
-    border-radius: 1rem;
-    padding-inline: 1rem;
-  }
+  background-color: var(--white-color);
+  color: var(--blue-color);
+  border-radius: 1rem;
+  padding-inline: 1rem;
+}
 
-  .css-1t6c9ts{
-    justify-content: flex-end;
-    gap: .5rem;
-  }
+.css-1t6c9ts {
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
 
-  .css-1q39md6-MuiButtonBase-root-MuiButton-root{
-    color:var(--blue-color) !important;
-  }
+.css-1q39md6-MuiButtonBase-root-MuiButton-root {
+  color: var(--blue-color) !important;
+}

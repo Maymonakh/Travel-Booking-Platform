@@ -28,18 +28,23 @@ const VisitedHotels = () => {
         backgroundColor: "white",
         marginTop: 1.5,
         paddingTop: 5,
-        paddingBottom:2,
+        paddingBottom: 2,
         borderRadius: 5,
       }}
     >
       <Typography variant="h5" gutterBottom marginBottom={3}>
         Recent Visited Hotels:
       </Typography>
-      <Grid container spacing={2} direction="column" sx={{
-        maxHeight:500,
-        overflowX:"scroll",
-        paddingBottom:3,
-      }}>
+      <Grid
+        container
+        spacing={2}
+        direction="column"
+        sx={{
+          maxHeight: 500,
+          overflowX: "scroll",
+          paddingBottom: 3,
+        }}
+      >
         {visitedHotels.length === 0 ? (
           <Grid item xs={12} style={{ textAlign: "center" }}>
             <CircularProgress />

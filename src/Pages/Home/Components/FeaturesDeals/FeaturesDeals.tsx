@@ -22,32 +22,35 @@ const FeaturesDeals = () => {
   }, []);
 
   return (
-
     <Container
       sx={{
         backgroundColor: "white",
         marginTop: 5,
         paddingTop: 5,
-        paddingBottom:2,
+        paddingBottom: 2,
         borderRadius: 5,
       }}
     >
       <Grid item xs={12} marginBottom={3}>
-          <Typography variant="h5">Featured Deals:</Typography>
-        </Grid>
-      <Grid container spacing={2} direction="column" sx={{
-        maxHeight:500,
-        overflowX:"scroll",
-        paddingBottom:3
-      }}>
-        
+        <Typography variant="h5">Featured Deals:</Typography>
+      </Grid>
+      <Grid
+        container
+        spacing={2}
+        direction="column"
+        sx={{
+          maxHeight: 500,
+          overflowX: "scroll",
+          paddingBottom: 3,
+        }}
+      >
         {featuresDealsData.length === 0 ? (
           <Grid item xs={12} style={{ textAlign: "center" }}>
             <CircularProgress />
           </Grid>
         ) : (
           featuresDealsData.map((hotel, index) => (
-            <Grid item key={index} xs={12}  lg={4}>
+            <Grid item key={index} xs={12} lg={4}>
               <FeaturesDealsCard data={hotel} />
             </Grid>
           ))

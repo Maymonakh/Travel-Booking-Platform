@@ -13,8 +13,6 @@ import { CitiesResponse, SearchRequestProps } from "../../API/Search/types";
 import { CitiesRequest, SearchRequest } from "../../API/Search/index";
 import { useNavigate } from "react-router-dom";
 
-
-
 const Searchbar: React.FC = () => {
   const [checkInDate, setCheckInDate] = useState<Date>(new Date());
   const [checkOutDate, setCheckOutDate] = useState<Date>(new Date());
@@ -56,7 +54,7 @@ const Searchbar: React.FC = () => {
       };
 
       const response = await SearchRequest(searchRequest);
-      navigate('/search', { state: { results: response.data } });
+      navigate("/search", { state: { results: response.data } });
     } catch (error) {
       console.error("Error in search:", error);
     }

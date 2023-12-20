@@ -5,7 +5,7 @@ import Login from "./Pages/Login";
 import Admin from "./Pages/Admin";
 import Home from "./Pages/Home";
 
-const App:React.FC = () => {
+const App: React.FC = () => {
   return (
     <BrowserRouter>
       <Routes>
