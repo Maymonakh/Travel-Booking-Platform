@@ -1,32 +1,65 @@
-import React, { useState } from "react";
-import { Container, Typography, TextField, Grid, Button } from "@mui/material";
+import React, { useEffect, useState } from "react";
+import {
+  Container,
+  Typography,
+  TextField,
+  Grid,
+  Button,
+  Autocomplete,
+} from "@mui/material";
 import "./SearchBar.css";
 import Countercomponent from "./Countercomponent";
+import { CitiesResponse, SearchRequestProps } from "../../API/Search/types";
+import { CitiesRequest, SearchRequest } from "../../API/Search/index";
+import { useNavigate } from "react-router-dom";
 
-interface SearchbarProps {
-  onSearch: (searchParams: {
-    checkInDate: Date;
-    checkOutDate: Date;
-    adults: number;
-    children: number;
-    rooms: number;
-  }) => void;
-}
 
-const Searchbar: React.FC<SearchbarProps> = ({ onSearch }) => {
+
+const Searchbar: React.FC = () => {
   const [checkInDate, setCheckInDate] = useState<Date>(new Date());
   const [checkOutDate, setCheckOutDate] = useState<Date>(new Date());
   const [adults, setAdults] = useState<number>(2);
   const [children, setChildren] = useState<number>(0);
   const [rooms, setRooms] = useState<number>(1);
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
+  const [selectedCity, setSelectedCity] = useState<string | null>(null);
+  const [citiesData, setCitiesData] = useState<CitiesResponse[]>([]);
+  const navigate = useNavigate();
 
-  const handleSearch = () => {
-    onSearch({ checkInDate, checkOutDate, adults, children, rooms });
-  };
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await CitiesRequest();
+        setCitiesData(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchData();
+  }, []);
 
   const toggleExpansion = () => {
     setIsExpanded(!isExpanded);
+  };
+
+  const handleSearch = async () => {
+    try {
+      const searchRequest: SearchRequestProps = {
+        checkInDate: checkInDate.toISOString().split("T")[0],
+        checkOutDate: checkOutDate.toISOString().split("T")[0],
+        city: selectedCity || "",
+        starRate: 0,
+        sort: "",
+        numberOfRooms: rooms,
+        adults: adults,
+        children: children,
+      };
+
+      const response = await SearchRequest(searchRequest);
+      navigate('/search', { state: { results: response.data } });
+    } catch (error) {
+      console.error("Error in search:", error);
+    }
   };
 
   return (
@@ -34,21 +67,34 @@ const Searchbar: React.FC<SearchbarProps> = ({ onSearch }) => {
       sx={{
         backgroundColor: "white",
         marginTop: 5,
-        padding:3,
+        padding: 3,
         borderRadius: 5,
       }}
     >
       <Grid container spacing={2}>
         <Grid item xs={10} onClick={toggleExpansion}>
-          <TextField
-            fullWidth
-            label="Search for hotels, cities..."
-            variant="outlined"
+          <Autocomplete
+            options={citiesData.map((city) => city.name)}
+            value={selectedCity}
+            onChange={(_, newValue) => setSelectedCity(newValue)}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                fullWidth
+                label="where are you going..."
+                variant="outlined"
+              />
+            )}
           />
-        
         </Grid>
+
         <Grid item xs={2}>
-          <Button variant="contained" color="primary" onClick={handleSearch} size="large">
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleSearch}
+            size="large"
+          >
             Search
           </Button>
         </Grid>
@@ -97,7 +143,6 @@ const Searchbar: React.FC<SearchbarProps> = ({ onSearch }) => {
             </Grid>
           </>
         )}
-      
       </Grid>
     </Container>
   );
