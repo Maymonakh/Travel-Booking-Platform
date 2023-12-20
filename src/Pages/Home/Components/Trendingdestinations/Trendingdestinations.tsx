@@ -39,7 +39,11 @@ const Trendingdestination = () => {
       <Typography variant="h5" component="h2" gutterBottom sx={{ margin: 2 }}>
         Trending Destinations
       </Typography>
-      <Grid container spacing={2}>
+      <Grid container spacing={2} direction="row" sx={{
+        maxHeight:825,
+        overflowY:"scroll",
+        paddingInline:2
+      }}>
         {DestinationsData.length === 0 ? (
           <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
             <CircularProgress />
