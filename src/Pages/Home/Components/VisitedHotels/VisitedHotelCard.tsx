@@ -18,7 +18,7 @@ const VisitedHotelsCard = ({ data }: { data: VisitedHotelsResponse }) => {
           <Rating name="read-only" value={data.starRating} readOnly />
         </div>
         <Typography variant="body1">{data.hotelName}</Typography>
-        <Typography variant="body2">{data.visitDate.split("T")[0]}</Typography>
+        <Typography variant="body2">Visited at : {data.visitDate.split("T")[0]}</Typography>
       </CardContent>
     </Card>
   );

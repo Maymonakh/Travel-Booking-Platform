@@ -54,7 +54,7 @@ const Searchbar: React.FC = () => {
       };
 
       const response = await SearchRequest(searchRequest);
-      navigate("/search", { state: { results: response.data } });
+      navigate("/Search", { state: { results: response.data } });
     } catch (error) {
       console.error("Error in search:", error);
     }

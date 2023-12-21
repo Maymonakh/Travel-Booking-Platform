@@ -1,15 +1,15 @@
 import React from "react";
-import Navbar from "../../Components/NavBar/Navbar";
-import Searchbar from "../../Components/Searchbar/Searchbar";
 import Trendingdestination from "./Components/Trendingdestinations";
 import { Grid } from "@mui/material";
 import FeaturesDeals from "./Components/FeaturesDeals";
 import VisitedHotels from "./Components/VisitedHotels";
+import NavBar from "../../Components/NavBar";
+import Searchbar from "../../Components/Searchbar";
 
 const Home: React.FC = () => {
   return (
     <div className="container">
-      <Navbar />
+      <NavBar />
       <Searchbar />
       <Grid container spacing={1.5}>
         <Grid item xs={12} md={4}>
