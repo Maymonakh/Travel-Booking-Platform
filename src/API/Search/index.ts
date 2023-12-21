@@ -11,3 +11,8 @@ export const SearchRequest = async (searchRequest: SearchRequestProps) => {
 export const CitiesRequest = async () => {
   return await axios.get(`${hostURL}/api/cities`);
 };
+
+
+export const AmenitiesRequest = async () => {
+  return await axios.get(`${hostURL}/api/search-results/amenities`);
+};

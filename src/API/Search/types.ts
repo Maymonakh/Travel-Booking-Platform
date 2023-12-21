@@ -33,3 +33,8 @@ export interface CitiesResponse {
   name: string;
   description: string;
 }
+
+export interface AmenitiesResponse{
+  name: string;
+  description: string;
+}
