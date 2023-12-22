@@ -5,6 +5,7 @@ import Login from "./Pages/Login";
 import Admin from "./Pages/Admin";
 import Home from "./Pages/Home";
 import Search from "./Pages/Search";
+import Footer from "./Components/Footer";
 
 const App: React.FC = () => {
   return (
@@ -15,6 +16,7 @@ const App: React.FC = () => {
         <Route path="/" Component={Login} />
         <Route path="/Search" Component={Search} />
       </Routes>
+      <Footer/>
     </BrowserRouter>
   );
 };
