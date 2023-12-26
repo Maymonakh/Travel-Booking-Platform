@@ -4,39 +4,30 @@ import { Card, CardContent, CardMedia, Typography } from "@mui/material";
 import { FeaturesDealsResponse } from "../../../../API/Home/types";
 
 const FeaturesDealsCard = ({ data }: { data: FeaturesDealsResponse }) => {
-  const {
-    roomPhotoUrl,
-    hotelName,
-    hotelStarRating,
-    cityName,
-    finalPrice,
-    originalRoomPrice,
-    discount,
-    title,
-  } = data;
-
   return (
     <Card>
       <CardMedia
         component="img"
-        alt={hotelName}
+        alt={data.hotelName}
         height="140"
-        image={roomPhotoUrl}
+        image={data.roomPhotoUrl}
       />
       <CardContent>
         <div>
-          <Typography variant="h6">{cityName}</Typography>
-          <Typography variant="subtitle1">{hotelName}</Typography>
-          <Typography variant="body2">{title}</Typography>
+          <Typography variant="h6">{data.cityName}</Typography>
+          <Typography variant="subtitle1">{data.hotelName}</Typography>
+          <Typography variant="body2">{data.title}</Typography>
         </div>
         <div>
-          <Rating name="read-only" value={hotelStarRating} readOnly />
+          <Rating name="read-only" value={data.hotelStarRating} readOnly />
           <Typography variant="body2">
-            Before: <del>{originalRoomPrice}$</del>
+            Before: <del>{data.originalRoomPrice}$</del>
           </Typography>
-          <Typography variant="body2">Discount: {discount * 100}%</Typography>
+          <Typography variant="body2">
+            Discount: {data.discount * 100}%
+          </Typography>
           <Typography variant="h6">
-            Final price: <span>{finalPrice}$</span>
+            Final price: <span>{data.finalPrice}$</span>
           </Typography>
         </div>
       </CardContent>
