@@ -20,3 +20,14 @@ export interface HotelGalleryResponse {
     availableRooms: number;
     imageUrl: string;
   }
+
+  export interface AvaliableRoomsResponse{
+    roomNumber: number;
+    roomPhotoUrl: string;
+    roomType: string;
+    capacityOfAdults: number;
+    capacityOfChildren: number;
+    roomAmenities:amenities[];
+    price: number;
+    availability: boolean;
+  }
