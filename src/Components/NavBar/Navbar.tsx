@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -9,21 +9,37 @@ import MenuIcon from "@mui/icons-material/Menu";
 import Button from "@mui/material/Button";
 import MenuItem from "@mui/material/MenuItem";
 import "./style.css";
+import { useNavigate } from "react-router-dom";
 
 const pages = ["Home", "Search", "Checkout"];
 
 const Navbar: React.FC = () => {
-  const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
+  const navigate = useNavigate();
+    const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null
   );
+  const [isLoggedIn, setIsLoggedIn] = useState(true);
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
   };
+
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
   };
-  //   const classes = useStyles();
+
+  const handleNavigation = (path: string) => {
+    navigate(path);
+    handleCloseNavMenu();
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("authToken");
+    localStorage.removeItem("userType");
+    setIsLoggedIn(false);
+    handleNavigation("/");
+  };
+
   return (
     <AppBar
       position="static"
@@ -88,7 +104,10 @@ const Navbar: React.FC = () => {
             }}
           >
             {pages.map((page) => (
-              <MenuItem key={page} onClick={handleCloseNavMenu}>
+              <MenuItem
+                key={page}
+                onClick={() => handleNavigation(`/${page.toLowerCase()}`)}
+              >
                 <Typography textAlign="center">{page}</Typography>
               </MenuItem>
             ))}
@@ -116,15 +135,24 @@ const Navbar: React.FC = () => {
           {pages.map((page) => (
             <Button
               key={page}
-              onClick={handleCloseNavMenu}
+              onClick={() => handleNavigation(`/${page.toLowerCase()}`)}
               sx={{ my: 2, color: "white", display: "block" }}
             >
               {page}
             </Button>
           ))}
+          {isLoggedIn && (
+            <Button
+              onClick={handleLogout}
+              sx={{ my: 2, color: "black", display: "block" }}
+            >
+              Logout
+            </Button>
+          )}
         </Box>
       </Toolbar>
     </AppBar>
   );
 };
+
 export default Navbar;

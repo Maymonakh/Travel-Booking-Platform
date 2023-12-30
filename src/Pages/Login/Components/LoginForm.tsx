@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { LoginRequestProps } from "../../../API/Authentication/types";
 import { loginRequest } from "../../../API/Authentication";
 import Snackbar from "@mui/material/Snackbar";
-import MuiAlert, { AlertColor } from "@mui/material/Alert"; // Import AlertColor
+import MuiAlert, { AlertColor } from "@mui/material/Alert";
 
 const schema = Yup.object().shape({
   userName: Yup.string().required("Username is a required field"),
@@ -17,13 +17,13 @@ const LoginForm: React.FC = () => {
   const navigate = useNavigate();
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
-  const [snackbarSeverity, setSnackbarSeverity] = useState<AlertColor | undefined>("error"); // Explicitly type as AlertColor
+  const [snackbarSeverity, setSnackbarSeverity] = useState<AlertColor | undefined>("error"); 
 
   const handleSnackbarClose = () => {
     setSnackbarOpen(false);
   };
 
-  const showAlert = (message: string, severity: AlertColor) => { // Adjust the parameter type
+  const showAlert = (message: string, severity: AlertColor) => { 
     setSnackbarMessage(message);
     setSnackbarSeverity(severity);
     setSnackbarOpen(true);
