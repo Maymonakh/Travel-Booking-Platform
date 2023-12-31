@@ -1,30 +1,44 @@
 import React, { useState, useEffect } from "react";
-import { Grid, Typography, Container, CircularProgress, CardMedia } from "@mui/material";
+import {
+  Grid,
+  Typography,
+  Container,
+  CircularProgress,
+  CardMedia,
+} from "@mui/material";
+import Modal from "react-modal";
 import { HotelGalleryResponse } from "../../../API/Hotel/types";
 import { HotelGalleryRequest } from "../../../API/Hotel";
 import { useLocation } from "react-router-dom";
 
 const HotelGallery = () => {
   const location = useLocation();
-  const hotelId = location.state?.results || [];
-
-  console.log(hotelId)
+  const hotel = location.state?.results || [];
 
   const [hotelGalleryData, setHotelGalleryData] = useState<
     HotelGalleryResponse[]
   >([]);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await HotelGalleryRequest(hotelId);
+        const response = await HotelGalleryRequest(hotel.hotelId);
         setHotelGalleryData(response.data);
       } catch (error) {
         console.error(error);
       }
     };
     fetchData();
-  }, []);
+  }, [hotel.hotelId]);
+
+  const openModal = (imageUrl: string) => {
+    setSelectedImage(imageUrl);
+  };
+
+  const closeModal = () => {
+    setSelectedImage(null);
+  };
 
   return (
     <Container
@@ -55,16 +69,29 @@ const HotelGallery = () => {
           </Grid>
         ) : (
           hotelGalleryData.map((hotel, index) => (
-            <Grid item key={index} xs={12} lg={4}>
-              <CardMedia
-                component="img"
-                height="140"
-                image={hotel.url}
-              />
+            <Grid
+              item
+              key={index}
+              xs={12}
+              lg={4}
+              onClick={() => openModal(hotel.url)}
+            >
+              <CardMedia component="img" height="140" image={hotel.url} />
             </Grid>
           ))
         )}
       </Grid>
+      <Modal
+        isOpen={!!selectedImage}
+        onRequestClose={closeModal}
+        contentLabel="Image Modal"
+      >
+        <img
+          src={selectedImage || ""}
+          alt="Selected"
+          style={{ width: "100%", height: "100%" }}
+        />
+      </Modal>
     </Container>
   );
 };

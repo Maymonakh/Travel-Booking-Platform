@@ -4,17 +4,19 @@ import {
   Typography,
   Container,
   CircularProgress,
-  CardMedia,
+  Button,
 } from "@mui/material";
 import { AvaliableRoomsResponse } from "../../../API/Hotel/types";
 import { AvailableRoomsRequest } from "../../../API/Hotel";
 import AvailableRoomsCard from "./AvailableRoomsCard";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const AvailableRooms = () => {
   const location = useLocation();
-  const hotelId = location.state?.results || [];
+  const hotel = location.state?.results || [];
+  const navigate = useNavigate();
 
+  const [selectedRooms, setSelectedRooms] = useState<AvaliableRoomsResponse[]>([]);
   const [availableRoomsData, setAvailableRoomsData] = useState<
     AvaliableRoomsResponse[]
   >([]);
@@ -22,14 +24,31 @@ const AvailableRooms = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await AvailableRoomsRequest(hotelId);
+        const response = await AvailableRoomsRequest(hotel.hotelId);
         setAvailableRoomsData(response.data);
       } catch (error) {
         console.error(error);
       }
     };
     fetchData();
-  }, []);
+  }, [hotel.hotelId]);
+
+  const handleRoomSelect = (room: AvaliableRoomsResponse) => {
+    console.log("Room selected:", room);
+    setSelectedRooms((prevSelectedRooms) =>
+      prevSelectedRooms.includes(room)
+        ? prevSelectedRooms.filter((id) => id !== room)
+        : [...prevSelectedRooms, room]
+    );
+  };
+  
+  const handleAddClick = () => {
+    navigate("/Checkout", {
+      state: { results: { hotel, selectedRooms } },
+    });
+  };
+
+  const isLoading = availableRoomsData.length === 0;
 
   return (
     <Container
@@ -41,8 +60,17 @@ const AvailableRooms = () => {
         borderRadius: 5,
       }}
     >
-      <Grid item xs={12} marginBottom={3}>
+      <Grid item xs={12} marginBottom={3} sx={{display:'flex',justifyContent:'space-between'}}>
         <Typography variant="h5">Available Rooms:</Typography>
+        <Button
+          variant="contained"
+          color="primary"
+          size="small"
+          onClick={handleAddClick}
+          disabled={selectedRooms.length === 0}
+        >
+          Add to cart ({selectedRooms.length})
+        </Button>
       </Grid>
       <Grid
         container
@@ -54,14 +82,18 @@ const AvailableRooms = () => {
           paddingBottom: 3,
         }}
       >
-        {availableRoomsData.length === 0 ? (
+        {isLoading ? (
           <Grid item xs={12} style={{ textAlign: "center" }}>
             <CircularProgress />
           </Grid>
         ) : (
-            availableRoomsData.map((hotel, index) => (
+          availableRoomsData.map((room:AvaliableRoomsResponse, index) => (
             <Grid item key={index} xs={12} lg={4}>
-              <AvailableRoomsCard data={hotel} />
+              <AvailableRoomsCard
+                data={room}
+                onSelect={() => handleRoomSelect(room)}
+                isSelected={selectedRooms.includes(room)}
+              />
             </Grid>
           ))
         )}

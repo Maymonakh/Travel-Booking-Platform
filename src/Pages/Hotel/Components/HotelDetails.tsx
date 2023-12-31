@@ -9,7 +9,9 @@ import LocationOnIcon from "@mui/icons-material/LocationOn";
 
 const HotelDetails = () => {
   const locations = useLocation();
-  const hotelId = locations.state?.results || [];
+  const hotel = locations.state?.results || [];
+  console.log(hotel);
+
 
   const [hotelDetailsData, setHotelDetailsData] =
     useState<HotelDetailsResponse>();
@@ -17,7 +19,7 @@ const HotelDetails = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await HotelDetailsRequest(hotelId);
+        const response = await HotelDetailsRequest(hotel.hotelId);
         setHotelDetailsData(response.data);
         console.log(response.data);
       } catch (error) {
