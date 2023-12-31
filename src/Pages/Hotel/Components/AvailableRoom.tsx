@@ -9,8 +9,12 @@ import {
 import { AvaliableRoomsResponse } from "../../../API/Hotel/types";
 import { AvailableRoomsRequest } from "../../../API/Hotel";
 import AvailableRoomsCard from "./AvailableRoomsCard";
+import { useLocation } from "react-router-dom";
 
 const AvailableRooms = () => {
+  const location = useLocation();
+  const hotelId = location.state?.results || [];
+
   const [availableRoomsData, setAvailableRoomsData] = useState<
     AvaliableRoomsResponse[]
   >([]);
@@ -18,7 +22,7 @@ const AvailableRooms = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await AvailableRoomsRequest();
+        const response = await AvailableRoomsRequest(hotelId);
         setAvailableRoomsData(response.data);
       } catch (error) {
         console.error(error);

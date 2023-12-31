@@ -9,8 +9,15 @@ import {
   Typography,
 } from "@mui/material";
 import { SearchResponse } from "../../../../API/Search/types";
+import { useNavigate } from "react-router-dom";
 
 const SearchedHotelsCard = ({ data }: { data: SearchResponse }) => {
+  const navigate = useNavigate();
+
+  const handleHotelNameClick = () => {
+    navigate("/Hotel", { state: { results: data.hotelId} });
+  };
+
   return (
     <Card sx={{ display: "flex", flexDirection: "column" }}>
       <CardMedia
@@ -23,7 +30,7 @@ const SearchedHotelsCard = ({ data }: { data: SearchResponse }) => {
         sx={{ display: "flex", flexDirection: "row", gap: 7, maxHeight: 80 }}
       >
         <Grid>
-          <Typography variant="h6" gutterBottom>
+          <Typography variant="h6" gutterBottom onClick={handleHotelNameClick}>
             {data.hotelName}
           </Typography>
           <Typography variant="subtitle1" gutterBottom>

@@ -2,8 +2,14 @@ import React, { useState, useEffect } from "react";
 import { Grid, Typography, Container, CircularProgress, CardMedia } from "@mui/material";
 import { HotelGalleryResponse } from "../../../API/Hotel/types";
 import { HotelGalleryRequest } from "../../../API/Hotel";
+import { useLocation } from "react-router-dom";
 
 const HotelGallery = () => {
+  const location = useLocation();
+  const hotelId = location.state?.results || [];
+
+  console.log(hotelId)
+
   const [hotelGalleryData, setHotelGalleryData] = useState<
     HotelGalleryResponse[]
   >([]);
@@ -11,7 +17,7 @@ const HotelGallery = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await HotelGalleryRequest();
+        const response = await HotelGalleryRequest(hotelId);
         setHotelGalleryData(response.data);
       } catch (error) {
         console.error(error);
