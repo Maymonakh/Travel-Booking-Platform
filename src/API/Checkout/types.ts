@@ -10,10 +10,12 @@ export interface BookingRequestProps{
 }
 
 export interface BookingResponse {
+  customerName: string;
   hotelName: string;
-  starRating: number;
-  visitDate: string;
-  cityName: string;
-  thumbnailUrl: string;
+  roomNumber: string;
+  roomType: string;
+  bookingDateTime: string;
+  totalCost: number;
+  paymentMethod:string;
+  bookingStatus: string;
 }
-

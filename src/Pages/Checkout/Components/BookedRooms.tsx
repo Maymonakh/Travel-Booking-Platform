@@ -16,15 +16,15 @@ import {
   Select,
   MenuItem,
 } from "@mui/material";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { AvaliableRoomsResponse } from "../../../API/Hotel/types";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { BookingRequestProps } from "../../../API/Checkout/types";
 import { BookingRequest } from "../../../API/Checkout";
 
 const BookedRooms = () => {
   const location = useLocation();
+  const navigate = useNavigate();
 
   const { hotel, selectedRooms } = location.state?.results || {};
 
@@ -39,8 +39,8 @@ const BookedRooms = () => {
     initialValues: {
       customerName: "",
       hotelName: hotel ? hotel.hotelName : "",
-      roomNumber: selectedRooms? selectedRooms[0].roomNumber : "",
-      roomType: selectedRooms? selectedRooms[0].roomType : "",
+      roomNumber: selectedRooms ? selectedRooms[0].roomNumber : "",
+      roomType: selectedRooms ? selectedRooms[0].roomType : "",
       bookingDateTime: new Date().toISOString(),
       totalCost: totalCost,
       paymentMethod: "",
@@ -55,7 +55,7 @@ const BookedRooms = () => {
         console.log(values);
         const token = localStorage.getItem("authToken");
         const response = await BookingRequest(token, values);
-        // Handle the response as needed
+        navigate("/Confirmation");
       } catch (error) {
         console.error("Booking request failed", error);
       }
