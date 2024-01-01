@@ -9,8 +9,16 @@ import {
   Typography,
 } from "@mui/material";
 import { SearchResponse } from "../../../../API/Search/types";
+import { useNavigate } from "react-router-dom";
 
 const SearchedHotelsCard = ({ data }: { data: SearchResponse }) => {
+  const navigate = useNavigate();
+
+  const handleHotelNameClick = () => {
+    navigate("/Hotel", { state: { results: data} });
+  };
+
+
   return (
     <Card sx={{ display: "flex", flexDirection: "column" }}>
       <CardMedia
@@ -23,7 +31,14 @@ const SearchedHotelsCard = ({ data }: { data: SearchResponse }) => {
         sx={{ display: "flex", flexDirection: "row", gap: 7, maxHeight: 80 }}
       >
         <Grid>
-          <Typography variant="h6" gutterBottom>
+          <Typography
+            variant="h6"
+            gutterBottom
+            onClick={handleHotelNameClick}
+            style={{
+              cursor: "pointer",
+            }}
+          >
             {data.hotelName}
           </Typography>
           <Typography variant="subtitle1" gutterBottom>
@@ -40,8 +55,8 @@ const SearchedHotelsCard = ({ data }: { data: SearchResponse }) => {
           </Typography>
         </Grid>
         <Grid sx={{ display: "flex", alignItems: "flex-end", marginLeft: 10 }}>
-          <Button variant="contained" color="primary" size="small">
-            Add to Cart
+          <Button variant="contained" color="primary" size="small" onClick={handleHotelNameClick}>
+            Select Room
           </Button>
         </Grid>
       </CardContent>

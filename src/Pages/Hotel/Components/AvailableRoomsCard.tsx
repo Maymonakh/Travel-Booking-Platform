@@ -9,12 +9,23 @@ import {
 } from '@mui/material';
 import { AvaliableRoomsResponse } from '../../../API/Hotel/types';
 
+interface AvailableRoomsCardProps {
+  data: AvaliableRoomsResponse;
+  onSelect: () => void;
+  isSelected: boolean;
+}
 
-
-const AvailableRoomsCard = ({ data }: { data: AvaliableRoomsResponse }) => {
+const AvailableRoomsCard: React.FC<AvailableRoomsCardProps> = ({
+  data,
+  onSelect,
+  isSelected,
+}) => {
+  const handleCardClick = () => {
+    onSelect();
+  };
 
   return (
-    <Card>
+    <Card onClick={handleCardClick} style={{ cursor: 'pointer', border: isSelected ? '2px solid #1976D2' : 'none' }}>
       <CardMedia
         component="img"
         height="140"
