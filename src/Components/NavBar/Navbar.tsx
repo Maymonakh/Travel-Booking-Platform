@@ -106,7 +106,7 @@ const Navbar: React.FC = () => {
             {pages.map((page) => (
               <MenuItem
                 key={page}
-                onClick={() => handleNavigation(`/${page.toLowerCase()}`)}
+                onClick={() => handleNavigation(`/${page}`)}
               >
                 <Typography textAlign="center">{page}</Typography>
               </MenuItem>
@@ -135,7 +135,7 @@ const Navbar: React.FC = () => {
           {pages.map((page) => (
             <Button
               key={page}
-              onClick={() => handleNavigation(`/${page.toLowerCase()}`)}
+              onClick={() => handleNavigation(`/${page}`)}
               sx={{ my: 2, color: "white", display: "block" }}
             >
               {page}
