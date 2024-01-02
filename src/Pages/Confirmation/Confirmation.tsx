@@ -14,7 +14,9 @@ const Confirmation: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await ConfirmationRequest();
+        const token = localStorage.getItem("authToken");
+        const response = await ConfirmationRequest(token);
+        console.log(response.data);
         setBookingData(response.data);
       } catch (error) {
         console.error(error);

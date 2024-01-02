@@ -15,12 +15,14 @@ import {
   TextField,
   Select,
   MenuItem,
+  InputLabel,
 } from "@mui/material";
 import { useLocation, useNavigate } from "react-router-dom";
 import { AvaliableRoomsResponse } from "../../../API/Hotel/types";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { BookingRequest } from "../../../API/Checkout";
+import { FormControl } from "@mui/base";
 
 const BookedRooms = () => {
   const location = useLocation();
@@ -148,14 +150,18 @@ const BookedRooms = () => {
               <TextField label="Email" fullWidth />
             </Grid>
             <Grid item xs={12}>
-              <Select
-                label="Payment Method"
-                fullWidth
-                {...formik.getFieldProps("paymentMethod")}
-              >
-                <MenuItem value="creditCard">Credit Card</MenuItem>
-                <MenuItem value="paypal">PayPal</MenuItem>
-              </Select>
+              <FormControl >
+                <InputLabel id="paymentMethodLabel">Payment Method</InputLabel>
+                <Select
+                  labelId="paymentMethodLabel"
+                  fullWidth
+                  {...formik.getFieldProps("paymentMethod")}
+                >
+                  <MenuItem value="creditCard">Credit Card</MenuItem>
+                  <MenuItem value="paypal">PayPal</MenuItem>
+                  <MenuItem value="cash">Cash</MenuItem>
+                </Select>
+              </FormControl>
             </Grid>
             <Grid item xs={12}>
               <TextField
