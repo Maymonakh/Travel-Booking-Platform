@@ -1,17 +1,14 @@
 import React from "react";
-import Searchbar from "./Components/Searchbar";
-import Navigation from "./Components/Navigation";
 import { Grid } from "@mui/material";
-import SearchedHotels from "./Components/DetailedGrid";
+import AdminNavBar from "./Components/Admin-Navbar";
 
 const Admin: React.FC = () => {
   return (
-    <div className="container">
-      <Searchbar />
+    <div>
+      <AdminNavBar/>
       <Grid container spacing={1.5}>
 
         <Grid item xs={12} >
-          <SearchedHotels />
         </Grid>
       </Grid>
     </div>
