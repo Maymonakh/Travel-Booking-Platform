@@ -11,10 +11,17 @@ import {
   IconButton,
   TextField,
   InputAdornment,
+  Button,
+  Grid,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import SearchIcon from "@mui/icons-material/Search";
-
+import CreateRoomForm from "../CreateForms/CreateRoomForm";
 
 const RoomsTable: React.FC = () => {
   const roomsData = [
@@ -62,99 +69,102 @@ const RoomsTable: React.FC = () => {
       hotelName: "Downtown Suites",
       city: "San Francisco",
     },
-    {
-      id: 5,
-      number: 202,
-      availability: false,
-      adultCapacity: 2,
-      childrenCapacity: 1,
-      createDate: "2022-05-25",
-      modifyDate: "2022-06-20",
-      hotelName: "Oceanfront Resort",
-      city: "Miami",
-    },
-    {
-      id: 6,
-      number: 302,
-      availability: true,
-      adultCapacity: 2,
-      childrenCapacity: 1,
-      createDate: "2022-06-30",
-      modifyDate: "2022-07-10",
-      hotelName: "Mountain View Lodge",
-      city: "Denver",
-    },
-    {
-      id: 7,
-      number: 103,
-      availability: true,
-      adultCapacity: 3,
-      childrenCapacity: 2,
-      createDate: "2022-07-15",
-      modifyDate: "2022-08-05",
-      hotelName: "Luxury Suites",
-      city: "Las Vegas",
-    },
-    {
-      id: 8,
-      number: 203,
-      availability: false,
-      adultCapacity: 2,
-      childrenCapacity: 1,
-      createDate: "2022-08-15",
-      modifyDate: "2022-09-10",
-      hotelName: "Harbor View Hotel",
-      city: "Seattle",
-    },
-    {
-      id: 9,
-      number: 303,
-      availability: true,
-      adultCapacity: 1,
-      childrenCapacity: 0,
-      createDate: "2022-09-20",
-      modifyDate: "2022-10-01",
-      hotelName: "Cozy Inn",
-      city: "Boston",
-    },
-    {
-      id: 10,
-      number: 104,
-      availability: true,
-      adultCapacity: 2,
-      childrenCapacity: 1,
-      createDate: "2022-10-05",
-      modifyDate: "2022-11-02",
-      hotelName: "Riverside Lodge",
-      city: "Portland",
-    },
   ];
 
-  const [searchTerm, setSearchTerm] = useState<string>('');
+  const [rooms, setRooms] = useState([...roomsData]);
+  const [searchTerm, setSearchTerm] = useState<string>("");
+  const [creating, setCreating] = useState<boolean>(false);
+  const [deletingRoom, setDeletingRoom] = useState<number | null>(null);
 
-  const filteredRooms = roomsData.filter((room) => {
-    const searchFields = [room.number.toString(), room.city ,room.hotelName];
+  const handleCreateClick = () => {
+    setCreating(true);
+  };
+
+  const handleClose = () => {
+    setCreating(false);
+    setDeletingRoom(null);
+  };
+
+  const handleRoomCreate = (newRoom: any) => {
+    setRooms((prevRooms) => [
+      ...prevRooms,
+      { ...newRoom, id: prevRooms.length + 1 },
+    ]);
+  };
+
+  const handleRoomDelete = (roomId: number) => {
+    setDeletingRoom(roomId);
+  };
+
+  const confirmDeleteRoom = () => {
+    setRooms((prevRooms) =>
+      prevRooms.filter((room) => room.id !== deletingRoom)
+    );
+    setDeletingRoom(null);
+    handleClose();
+  };
+
+  const filteredRooms = rooms.filter((room) => {
+    const searchFields = [room.number.toString(), room.city, room.hotelName];
     const normalizedSearchTerm = searchTerm.toLowerCase();
-    return searchFields.some((field) => field.toLowerCase().includes(normalizedSearchTerm));
+    return searchFields.some((field) =>
+      field.toLowerCase().includes(normalizedSearchTerm)
+    );
   });
 
   return (
     <Box>
-      <TextField
-        label="Search"
-        variant="outlined"
-        fullWidth
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-        sx={{ marginBottom: 2 }}
-        InputProps={{
-          startAdornment: (
-            <InputAdornment position="start">
-              <SearchIcon />
-            </InputAdornment>
-          ),
-        }}
-      />
+      <Grid xs={12} sx={{ display: "flex", flexDirection: "row" }}>
+        <Grid xs={11}>
+          <TextField
+            label="Search"
+            variant="outlined"
+            fullWidth
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            sx={{ marginBottom: 2 }}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon />
+                </InputAdornment>
+              ),
+            }}
+          />
+        </Grid>
+        <Grid xs={1} alignSelf={"center"} marginLeft={4}>
+          <Button variant="contained" onClick={handleCreateClick}>
+            Create
+          </Button>
+        </Grid>
+      </Grid>
+      <Dialog open={creating} onClose={handleClose}>
+        <DialogTitle>Create Room</DialogTitle>
+        <DialogContent>
+          <CreateRoomForm
+            onClose={handleClose}
+            onRoomCreate={handleRoomCreate}
+          />
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={deletingRoom !== null} onClose={handleClose}>
+        <DialogTitle>Confirm Deletion</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Are you sure you want to delete this room?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={confirmDeleteRoom} color="primary">
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
+
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
@@ -175,7 +185,7 @@ const RoomsTable: React.FC = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-          {filteredRooms.map((room) => (
+            {filteredRooms.map((room) => (
               <TableRow key={room.id}>
                 <TableCell>{room.city}</TableCell>
                 <TableCell>{room.hotelName}</TableCell>
@@ -186,7 +196,10 @@ const RoomsTable: React.FC = () => {
                 <TableCell>{room.createDate}</TableCell>
                 <TableCell>{room.modifyDate}</TableCell>
                 <TableCell>
-                  <IconButton color="secondary">
+                  <IconButton
+                    onClick={() => handleRoomDelete(room.id)}
+                    color="primary"
+                  >
                     <DeleteIcon />
                   </IconButton>
                 </TableCell>

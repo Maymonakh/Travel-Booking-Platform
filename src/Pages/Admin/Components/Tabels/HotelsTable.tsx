@@ -11,50 +11,153 @@ import {
   IconButton,
   TextField,
   InputAdornment,
+  Grid,
+  Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import SearchIcon from "@mui/icons-material/Search";
-
+import CreateHotelForm from "../CreateForms/CreateHotelForm";
 
 const HotelsTable: React.FC = () => {
   const hotelsData = [
-    { id: 1, name: "Grand Hotel", starRate: 5, owner: "Hotelier X", roomNumber: 300, createDate: "2022-01-01", modifyDate: "2022-01-02", city: "New York" },
-    { id: 2, name: "Beach Resort", starRate: 4, owner: "Hotelier Y", roomNumber: 150, createDate: "2022-02-15", modifyDate: "2022-03-01", city: "London" },
-    { id: 3, name: "City View Inn", starRate: 3, owner: "Hotelier Z", roomNumber: 200, createDate: "2022-03-10", modifyDate: "2022-04-05", city: "Tokyo" },
-    { id: 4, name: "Mountain Lodge", starRate: 4, owner: "Hotelier W", roomNumber: 120, createDate: "2022-04-20", modifyDate: "2022-05-15", city: "Paris" },
-    { id: 5, name: "Luxury Suites", starRate: 5, owner: "Hotelier V", roomNumber: 180, createDate: "2022-05-25", modifyDate: "2022-06-20", city: "Sydney" },
-    { id: 6, name: "Riverside Hotel", starRate: 4, owner: "Hotelier U", roomNumber: 250, createDate: "2022-06-30", modifyDate: "2022-07-10", city: "Mumbai" },
-    { id: 7, name: "Historic Inn", starRate: 3, owner: "Hotelier T", roomNumber: 80, createDate: "2022-07-15", modifyDate: "2022-08-05", city: "Rio de Janeiro" },
-    { id: 8, name: "Urban Retreat", starRate: 4, owner: "Hotelier S", roomNumber: 200, createDate: "2022-08-15", modifyDate: "2022-09-10", city: "Berlin" },
-    { id: 9, name: "Seaside Resort", starRate: 5, owner: "Hotelier R", roomNumber: 300, createDate: "2022-09-20", modifyDate: "2022-10-01", city: "Cape Town" },
-    { id: 10, name: "Skyline Tower", starRate: 4, owner: "Hotelier Q", roomNumber: 180, createDate: "2022-10-05", modifyDate: "2022-11-02", city: "Moscow" },
+    {
+      id: 1,
+      name: "Grand Hotel",
+      starRate: 5,
+      owner: "Hotelier X",
+      roomNumber: 300,
+      createDate: "2022-01-01",
+      modifyDate: "2022-01-02",
+      city: "New York",
+    },
+    {
+      id: 2,
+      name: "Beach Resort",
+      starRate: 4,
+      owner: "Hotelier Y",
+      roomNumber: 150,
+      createDate: "2022-02-15",
+      modifyDate: "2022-03-01",
+      city: "London",
+    },
+    {
+      id: 3,
+      name: "City View Inn",
+      starRate: 3,
+      owner: "Hotelier Z",
+      roomNumber: 200,
+      createDate: "2022-03-10",
+      modifyDate: "2022-04-05",
+      city: "Tokyo",
+    },
+    {
+      id: 4,
+      name: "Mountain Lodge",
+      starRate: 4,
+      owner: "Hotelier W",
+      roomNumber: 120,
+      createDate: "2022-04-20",
+      modifyDate: "2022-05-15",
+      city: "Paris",
+    },
   ];
-  
-  const [searchTerm, setSearchTerm] = useState<string>('');
 
-  const filteredHotels = hotelsData.filter((hotel) => {
+  const [hotels, setHotels] = useState([...hotelsData]);
+  const [searchTerm, setSearchTerm] = useState<string>("");
+  const [creating, setCreating] = useState<boolean>(false);
+  const [deletingHotel, setDeletingHotel] = useState<number | null>(null);
+
+  const handleCreateClick = () => {
+    setCreating(true);
+  };
+
+  const handleClose = () => {
+    setCreating(false);
+    setDeletingHotel(null);
+  };
+
+  const handleHotelCreate = (newHotel: any) => {
+    setHotels((prevHotels) => [
+      ...prevHotels,
+      { ...newHotel, id: prevHotels.length + 1 },
+    ]);
+  };
+
+  const handleHotelDelete = (hotelId: number) => {
+    setDeletingHotel(hotelId);
+  };
+
+  const confirmDeleteHotel = () => {
+    setHotels((prevHotels) =>
+      prevHotels.filter((hotel) => hotel.id !== deletingHotel)
+    );
+    setDeletingHotel(null);
+    handleClose();
+  };
+  const filteredHotels = hotels.filter((hotel) => {
     const searchFields = [hotel.name, hotel.city];
     const normalizedSearchTerm = searchTerm.toLowerCase();
-    return searchFields.some((field) => field.toLowerCase().includes(normalizedSearchTerm));
+    return searchFields.some((field) =>
+      field.toLowerCase().includes(normalizedSearchTerm)
+    );
   });
 
   return (
     <Box>
-      <TextField
-        label="Search"
-        variant="outlined"
-        fullWidth
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-        sx={{ marginBottom: 2 }}
-        InputProps={{
-          startAdornment: (
-            <InputAdornment position="start">
-              <SearchIcon />
-            </InputAdornment>
-          ),
-        }}
-      />
+      <Grid xs={12} sx={{ display: "flex", flexDirection: "row" }}>
+        <Grid xs={11}>
+          <TextField
+            label="Search"
+            variant="outlined"
+            fullWidth
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            sx={{ marginBottom: 2 }}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon />
+                </InputAdornment>
+              ),
+            }}
+          />
+        </Grid>
+        <Grid xs={1} alignSelf="center" marginLeft={4}>
+          <Button variant="contained" onClick={handleCreateClick}>
+            Create
+          </Button>
+        </Grid>
+      </Grid>
+      <Dialog open={creating} onClose={handleClose}>
+        <DialogTitle>Create Hotel</DialogTitle>
+        <DialogContent>
+          <CreateHotelForm
+            onClose={handleClose}
+            onHotelCreate={handleHotelCreate}
+          />
+        </DialogContent>
+      </Dialog>
+      <Dialog open={deletingHotel !== null} onClose={handleClose}>
+        <DialogTitle>Confirm Deletion</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Are you sure you want to delete this hotel?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={confirmDeleteHotel} color="primary">
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
@@ -83,7 +186,10 @@ const HotelsTable: React.FC = () => {
                 <TableCell>{hotel.createDate}</TableCell>
                 <TableCell>{hotel.modifyDate}</TableCell>
                 <TableCell>
-                  <IconButton color="secondary">
+                  <IconButton
+                    onClick={() => handleHotelDelete(hotel.id)}
+                    color="primary"
+                  >
                     <DeleteIcon />
                   </IconButton>
                 </TableCell>
