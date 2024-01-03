@@ -11,11 +11,20 @@ import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 
-export default function AdminNavBar() {
+interface AdminNavBarProps {
+  onMenuItemClick: (menuItem: string) => void;
+}
+
+const AdminNavBar: React.FC<AdminNavBarProps> = ({ onMenuItemClick }) => {
   const [drawerOpen, setDrawerOpen] = useState<boolean>(false);
 
   const toggleDrawer = (open: boolean) => () => {
     setDrawerOpen(open);
+  };
+
+  const handleMenuItemClick = (menuItem: string) => {
+    onMenuItemClick(menuItem);
+    toggleDrawer(false)();
   };
 
   return (
@@ -53,17 +62,19 @@ export default function AdminNavBar() {
 
       <Drawer anchor="left" open={drawerOpen} onClose={toggleDrawer(false)}>
         <List sx={{ width: 150 }}>
-          <ListItem button>
+          <ListItem button onClick={() => handleMenuItemClick("Cities")}>
             <ListItemText primary="Cities" />
           </ListItem>
-          <ListItem button>
+          <ListItem button onClick={() => handleMenuItemClick("Hotels")}>
             <ListItemText primary="Hotels" />
           </ListItem>
-          <ListItem button>
+          <ListItem button onClick={() => handleMenuItemClick("Rooms")}>
             <ListItemText primary="Rooms" />
           </ListItem>
         </List>
       </Drawer>
     </Box>
   );
-}
+};
+
+export default AdminNavBar;
