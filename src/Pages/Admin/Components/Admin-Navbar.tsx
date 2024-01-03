@@ -61,15 +61,15 @@ const AdminNavBar: React.FC<AdminNavBarProps> = ({ onMenuItemClick }) => {
       </AppBar>
 
       <Drawer anchor="left" open={drawerOpen} onClose={toggleDrawer(false)}>
-        <List sx={{ width: 150 }}>
+        <List sx={{ width: 200,marginTop:6,marginLeft:3}}>
           <ListItem button onClick={() => handleMenuItemClick("Cities")}>
-            <ListItemText primary="Cities" />
+            <ListItemText sx={{ marginBottom:3}} primary="Cities" />
           </ListItem>
           <ListItem button onClick={() => handleMenuItemClick("Hotels")}>
-            <ListItemText primary="Hotels" />
+            <ListItemText sx={{ marginBottom:3}} primary="Hotels" />
           </ListItem>
           <ListItem button onClick={() => handleMenuItemClick("Rooms")}>
-            <ListItemText primary="Rooms" />
+            <ListItemText sx={{ marginBottom:3}} primary="Rooms" />
           </ListItem>
         </List>
       </Drawer>
