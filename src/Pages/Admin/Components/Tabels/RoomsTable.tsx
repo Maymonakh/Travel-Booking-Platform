@@ -21,7 +21,9 @@ import {
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import SearchIcon from "@mui/icons-material/Search";
+import EditIcon from "@mui/icons-material/Edit";
 import CreateRoomForm from "../CreateForms/CreateRoomForm";
+import EditRoomForm from "../UpdatesForms/EditRoomForm";
 
 const RoomsTable: React.FC = () => {
   const roomsData = [
@@ -75,6 +77,8 @@ const RoomsTable: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [creating, setCreating] = useState<boolean>(false);
   const [deletingRoom, setDeletingRoom] = useState<number | null>(null);
+  const [editingRoom, setEditingRoom] = useState<number | null>(null);
+  const [editing, setEditing] = useState<boolean>(false);
 
   const handleCreateClick = () => {
     setCreating(true);
@@ -83,6 +87,8 @@ const RoomsTable: React.FC = () => {
   const handleClose = () => {
     setCreating(false);
     setDeletingRoom(null);
+    setEditing(false);
+    setEditingRoom(null);
   };
 
   const handleRoomCreate = (newRoom: any) => {
@@ -90,6 +96,7 @@ const RoomsTable: React.FC = () => {
       ...prevRooms,
       { ...newRoom, id: prevRooms.length + 1 },
     ]);
+    setCreating(false);
   };
 
   const handleRoomDelete = (roomId: number) => {
@@ -102,6 +109,11 @@ const RoomsTable: React.FC = () => {
     );
     setDeletingRoom(null);
     handleClose();
+  };
+
+  const handleRoomEdit = (roomId: number) => {
+    setEditingRoom(roomId);
+    setEditing(true);
   };
 
   const filteredRooms = rooms.filter((room) => {
@@ -148,7 +160,7 @@ const RoomsTable: React.FC = () => {
         </DialogContent>
       </Dialog>
 
-      <Dialog open={deletingRoom !== null} onClose={handleClose}>
+       <Dialog open={deletingRoom !== null} onClose={handleClose}>
         <DialogTitle>Confirm Deletion</DialogTitle>
         <DialogContent>
           <DialogContentText>
@@ -163,6 +175,17 @@ const RoomsTable: React.FC = () => {
             Delete
           </Button>
         </DialogActions>
+      </Dialog>
+
+      <Dialog open={editing} onClose={handleClose}>
+        <DialogTitle>Edit Room</DialogTitle>
+        <DialogContent>
+          <EditRoomForm
+            onClose={handleClose}
+            onRoomEdit={handleRoomEdit}
+            roomData={rooms.find((room) => room.id === editingRoom)}
+          />
+        </DialogContent>
       </Dialog>
 
       <TableContainer component={Paper}>
@@ -182,6 +205,7 @@ const RoomsTable: React.FC = () => {
                 Modification Date
               </TableCell>
               <TableCell sx={{ fontWeight: "bold" }}>Delete</TableCell>
+              <TableCell sx={{ fontWeight: "bold" }}>Update</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -201,6 +225,14 @@ const RoomsTable: React.FC = () => {
                     color="primary"
                   >
                     <DeleteIcon />
+                  </IconButton>
+                </TableCell>
+                <TableCell>
+                  <IconButton
+                    onClick={() => handleRoomEdit(room.id)}
+                    color="primary"
+                  >
+                    <EditIcon />
                   </IconButton>
                 </TableCell>
               </TableRow>

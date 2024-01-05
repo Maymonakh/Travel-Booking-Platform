@@ -16,8 +16,7 @@ interface CreateRoomFormProps {
 
 const validationSchema = yup.object({
   city: yup.string().required("City name is required"),
-  country: yup.string().required("Country is required"),
-  postOffice: yup.string().required("Post Office is required"),
+  hotelName: yup.string().required("Hotel Name is required"),
   number: yup
     .number()
     .required("Room Number is required")
@@ -37,7 +36,6 @@ const validationSchema = yup.object({
     .required("Children Capacity is required")
     .positive("Children Capacity must be positive")
     .integer("Children Capacity must be an integer"),
-  hotelName: yup.string().required("Hotel Name is required"),
 });
 
 const CreateRoomForm: React.FC<CreateRoomFormProps> = ({
@@ -47,13 +45,11 @@ const CreateRoomForm: React.FC<CreateRoomFormProps> = ({
   const formik = useFormik({
     initialValues: {
       city: "",
-      country: "",
-      postOffice: "",
+      hotelName: "",
       number: null,
       availability: "yes",
       adultCapacity: null,
       childrenCapacity: null,
-      hotelName: "",
     },
     validationSchema: validationSchema,
     onSubmit: (values, { setSubmitting, resetForm }) => {
@@ -78,24 +74,15 @@ const CreateRoomForm: React.FC<CreateRoomFormProps> = ({
         {...formik.getFieldProps("city")}
         error={formik.touched.city && Boolean(formik.errors.city)}
         helperText={formik.touched.city && formik.errors.city}
-      />
+      />      
       <TextField
-        label="Country"
+        label="Hotel Name"
         variant="outlined"
         fullWidth
         margin="normal"
-        {...formik.getFieldProps("country")}
-        error={formik.touched.country && Boolean(formik.errors.country)}
-        helperText={formik.touched.country && formik.errors.country}
-      />
-      <TextField
-        label="Post Office"
-        variant="outlined"
-        fullWidth
-        margin="normal"
-        {...formik.getFieldProps("postOffice")}
-        error={formik.touched.postOffice && Boolean(formik.errors.postOffice)}
-        helperText={formik.touched.postOffice && formik.errors.postOffice}
+        {...formik.getFieldProps("hotelName")}
+        error={formik.touched.hotelName && Boolean(formik.errors.hotelName)}
+        helperText={formik.touched.hotelName && formik.errors.hotelName}
       />
       <TextField
         label="Room Number"
@@ -146,15 +133,7 @@ const CreateRoomForm: React.FC<CreateRoomFormProps> = ({
           formik.touched.childrenCapacity && formik.errors.childrenCapacity
         }
       />
-      <TextField
-        label="Hotel Name"
-        variant="outlined"
-        fullWidth
-        margin="normal"
-        {...formik.getFieldProps("hotelName")}
-        error={formik.touched.hotelName && Boolean(formik.errors.hotelName)}
-        helperText={formik.touched.hotelName && formik.errors.hotelName}
-      />
+
       <Button
         type="submit"
         variant="contained"

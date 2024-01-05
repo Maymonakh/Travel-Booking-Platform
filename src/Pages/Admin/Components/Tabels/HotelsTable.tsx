@@ -21,7 +21,9 @@ import {
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import SearchIcon from "@mui/icons-material/Search";
+import EditIcon from "@mui/icons-material/Edit";
 import CreateHotelForm from "../CreateForms/CreateHotelForm";
+import EditHotelForm from "../UpdatesForms/EditHotelForm";
 
 const HotelsTable: React.FC = () => {
   const hotelsData = [
@@ -71,6 +73,7 @@ const HotelsTable: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [creating, setCreating] = useState<boolean>(false);
   const [deletingHotel, setDeletingHotel] = useState<number | null>(null);
+  const [editingHotel, setEditingHotel] = useState<number | null>(null);
 
   const handleCreateClick = () => {
     setCreating(true);
@@ -79,6 +82,7 @@ const HotelsTable: React.FC = () => {
   const handleClose = () => {
     setCreating(false);
     setDeletingHotel(null);
+    setEditingHotel(null);
   };
 
   const handleHotelCreate = (newHotel: any) => {
@@ -86,6 +90,7 @@ const HotelsTable: React.FC = () => {
       ...prevHotels,
       { ...newHotel, id: prevHotels.length + 1 },
     ]);
+    setCreating(false);
   };
 
   const handleHotelDelete = (hotelId: number) => {
@@ -99,6 +104,11 @@ const HotelsTable: React.FC = () => {
     setDeletingHotel(null);
     handleClose();
   };
+
+  const handleHotelEdit = (hotelId: number) => {
+    setEditingHotel(hotelId);
+  };
+
   const filteredHotels = hotels.filter((hotel) => {
     const searchFields = [hotel.name, hotel.city];
     const normalizedSearchTerm = searchTerm.toLowerCase();
@@ -127,7 +137,7 @@ const HotelsTable: React.FC = () => {
             }}
           />
         </Grid>
-        <Grid xs={1} alignSelf="center" marginLeft={4}>
+        <Grid xs={1} alignSelf={"center"} marginLeft={4}>
           <Button variant="contained" onClick={handleCreateClick}>
             Create
           </Button>
@@ -158,6 +168,25 @@ const HotelsTable: React.FC = () => {
           </Button>
         </DialogActions>
       </Dialog>
+      <Dialog open={editingHotel !== null} onClose={handleClose}>
+        <DialogTitle>Edit Hotel</DialogTitle>
+        <DialogContent>
+          <EditHotelForm
+            onClose={handleClose}
+            onHotelEdit={(editedHotel) => {
+              setHotels((prevHotels) =>
+                prevHotels.map((hotel) =>
+                  hotel.id === editingHotel
+                    ? { ...hotel, ...editedHotel }
+                    : hotel
+                )
+              );
+              setEditingHotel(null);
+            }}
+            hotelData={hotels.find((hotel) => hotel.id === editingHotel)}
+          />
+        </DialogContent>
+      </Dialog>
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
@@ -172,6 +201,7 @@ const HotelsTable: React.FC = () => {
                 Modification Date
               </TableCell>
               <TableCell sx={{ fontWeight: "bold" }}>Delete</TableCell>
+              <TableCell sx={{ fontWeight: "bold" }}>Update</TableCell>
             </TableRow>
           </TableHead>
 
@@ -191,6 +221,14 @@ const HotelsTable: React.FC = () => {
                     color="primary"
                   >
                     <DeleteIcon />
+                  </IconButton>
+                </TableCell>
+                <TableCell>
+                  <IconButton
+                    onClick={() => handleHotelEdit(hotel.id)}
+                    color="primary"
+                  >
+                    <EditIcon />
                   </IconButton>
                 </TableCell>
               </TableRow>

@@ -21,7 +21,10 @@ import {
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import SearchIcon from "@mui/icons-material/Search";
+import EditIcon from "@mui/icons-material/Edit";
+
 import CreateCityForm from "../CreateForms/CreateCityForm";
+import EditCityForm from "../UpdatesForms/EditCityForm";
 
 const CitiesTable: React.FC = () => {
   const citiesData = [
@@ -72,10 +75,12 @@ const CitiesTable: React.FC = () => {
     },
   ];
 
+  
   const [cities, setCities] = useState([...citiesData]);
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [creating, setCreating] = useState<boolean>(false);
   const [deletingCity, setDeletingCity] = useState<number | null>(null);
+  const [editingCity, setEditingCity] = useState<number | null>(null);
 
   const handleCreateClick = () => {
     setCreating(true);
@@ -84,6 +89,7 @@ const CitiesTable: React.FC = () => {
   const handleClose = () => {
     setCreating(false);
     setDeletingCity(null);
+    setEditingCity(null);
   };
 
   const handleCityCreate = (newCity: any) => {
@@ -91,6 +97,7 @@ const CitiesTable: React.FC = () => {
       ...prevCities,
       { ...newCity, id: prevCities.length + 1 },
     ]);
+    setCreating(false);
   };
 
   const handleCityDelete = (cityId: number) => {
@@ -103,6 +110,10 @@ const CitiesTable: React.FC = () => {
     );
     setDeletingCity(null);
     handleClose();
+  };
+
+  const handleCityEdit = (cityId: number) => {
+    setEditingCity(cityId);
   };
 
   const filteredCities = cities.filter((city) => {
@@ -166,6 +177,24 @@ const CitiesTable: React.FC = () => {
         </DialogActions>
       </Dialog>
 
+      <Dialog open={editingCity !== null} onClose={handleClose}>
+        <DialogTitle>Edit City</DialogTitle>
+        <DialogContent>
+          <EditCityForm
+            onClose={handleClose}
+            onCityEdit={(editedCity) => {
+              setCities((prevCities) =>
+                prevCities.map((city) =>
+                  city.id === editingCity ? { ...city, ...editedCity } : city
+                )
+              );
+              setEditingCity(null);
+            }}
+            cityData={cities.find((city) => city.id === editingCity)}
+          />
+        </DialogContent>
+      </Dialog>
+
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
@@ -181,6 +210,7 @@ const CitiesTable: React.FC = () => {
                 Modification Date
               </TableCell>
               <TableCell sx={{ fontWeight: "bold" }}>Delete</TableCell>
+              <TableCell sx={{ fontWeight: "bold" }}>Update</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -198,6 +228,14 @@ const CitiesTable: React.FC = () => {
                     onClick={() => handleCityDelete(city.id)}
                   >
                     <DeleteIcon />
+                  </IconButton>
+                </TableCell>
+                <TableCell>
+                  <IconButton
+                    color="primary"
+                    onClick={() => handleCityEdit(city.id)}
+                  >
+                    <EditIcon />
                   </IconButton>
                 </TableCell>
               </TableRow>
