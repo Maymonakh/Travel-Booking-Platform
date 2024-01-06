@@ -16,6 +16,7 @@ export interface SearchRequestProps {
 }
 
 export interface SearchResponse {
+  hotelId:number;
   hotelName: string;
   starRating: number;
   latitude: number;

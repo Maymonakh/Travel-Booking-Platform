@@ -22,6 +22,7 @@ const Searchbar: React.FC = () => {
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
   const [selectedCity, setSelectedCity] = useState<string | null>(null);
   const [citiesData, setCitiesData] = useState<CitiesResponse[]>([]);
+  const [dateError, setDateError] = useState<string | null>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -40,11 +41,27 @@ const Searchbar: React.FC = () => {
     setIsExpanded(!isExpanded);
   };
 
-  const handleSearch = async () => {
+  const validateAndSearch = async () => {
+    const today = new Date();
+    const selectedCheckInDate = new Date(checkInDate);
+    const selectedCheckOutDate = new Date(checkOutDate);
+
+    if (selectedCheckInDate < today) {
+      setDateError("Check-in date should be today or later");
+      return;
+    }
+
+    if (selectedCheckOutDate <= selectedCheckInDate) {
+      setDateError("Check-out date should be after check-in date");
+      return;
+    }
+
+    setDateError(null);
+
     try {
       const searchRequest: SearchRequestProps = {
-        checkInDate: checkInDate.toISOString().split("T")[0],
-        checkOutDate: checkOutDate.toISOString().split("T")[0],
+        checkInDate: selectedCheckInDate.toISOString().split("T")[0],
+        checkOutDate: selectedCheckOutDate.toISOString().split("T")[0],
         city: selectedCity || "",
         starRate: 0,
         sort: "",
@@ -70,7 +87,7 @@ const Searchbar: React.FC = () => {
       }}
     >
       <Grid container spacing={2}>
-        <Grid item xs={10} onClick={toggleExpansion}>
+        <Grid item lg={10} xs={12} onClick={toggleExpansion}>
           <Autocomplete
             options={citiesData.map((city) => city.name)}
             value={selectedCity}
@@ -86,11 +103,11 @@ const Searchbar: React.FC = () => {
           />
         </Grid>
 
-        <Grid item xs={2}>
+        <Grid item lg={2} xs={2} >
           <Button
             variant="contained"
             color="primary"
-            onClick={handleSearch}
+            onClick={validateAndSearch}
             size="large"
           >
             Search
@@ -119,7 +136,6 @@ const Searchbar: React.FC = () => {
                   shrink: true,
                 }}
               />
-
               <Countercomponent
                 label="Adults:"
                 value={adults}
@@ -139,6 +155,12 @@ const Searchbar: React.FC = () => {
                 onDecrement={() => setRooms(Math.max(rooms - 1, 1))}
               />
             </Grid>
+
+            {dateError && (
+              <Typography color="error" variant="caption">
+                {dateError}
+              </Typography>
+            )}
           </>
         )}
       </Grid>

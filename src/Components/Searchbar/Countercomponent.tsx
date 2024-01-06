@@ -23,13 +23,13 @@ const Countercomponent: React.FC<CountercomponentProps> = ({
       xs={2}
       sx={{ border: "1px solid #ddd", borderRadius: 1, padding: 1 }}
     >
-      <Typography variant="subtitle1" sx={{ flexGrow: 0 }}>
+      <Typography variant="subtitle1" sx={{ flexGrow: 0 ,margin:0.5}}>
         {label}
       </Typography>
-      <IconButton size="small" onClick={onIncrement}>
+      <IconButton size="small" onClick={onIncrement} >
         <AddIcon />
       </IconButton>
-      <span>{value}</span>
+      <span style={{marginTop:6 ,fontWeight:500}}>{value}</span>
       <IconButton size="small" onClick={onDecrement}>
         <RemoveIcon />
       </IconButton>
