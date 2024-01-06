@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Table,
@@ -18,70 +18,50 @@ import {
   DialogContent,
   DialogActions,
   DialogContentText,
+  Snackbar,
+  SnackbarContent,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import SearchIcon from "@mui/icons-material/Search";
 import EditIcon from "@mui/icons-material/Edit";
-
 import CreateCityForm from "../CreateForms/CreateCityForm";
 import EditCityForm from "../UpdatesForms/EditCityForm";
+import { CitiesResponse } from "../../../../API/Admin/types";
+import { CitiesRequest, deleteCity } from "../../../../API/Admin";
 
 const CitiesTable: React.FC = () => {
-  const citiesData = [
-    {
-      id: 1,
-      name: "New York",
-      country: "USA",
-      postOffice: "NYPO",
-      numberOfHotels: 1500,
-      createDate: "2022-01-01",
-      modifyDate: "2022-01-02",
-    },
-    {
-      id: 2,
-      name: "London",
-      country: "UK",
-      postOffice: "LONPO",
-      numberOfHotels: 1000,
-      createDate: "2022-02-15",
-      modifyDate: "2022-03-01",
-    },
-    {
-      id: 3,
-      name: "Tokyo",
-      country: "Japan",
-      postOffice: "TKYPO",
-      numberOfHotels: 800,
-      createDate: "2022-03-10",
-      modifyDate: "2022-04-05",
-    },
-    {
-      id: 4,
-      name: "Paris",
-      country: "France",
-      postOffice: "PARPO",
-      numberOfHotels: 1200,
-      createDate: "2022-04-20",
-      modifyDate: "2022-05-15",
-    },
-    {
-      id: 5,
-      name: "Sydney",
-      country: "Australia",
-      postOffice: "SYDPO",
-      numberOfHotels: 600,
-      createDate: "2022-05-25",
-      modifyDate: "2022-06-20",
-    },
-  ];
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState("success");
 
-  
-  const [cities, setCities] = useState([...citiesData]);
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
+  };
+
+  const currentDate = new Date();
+  const formattedDate = currentDate.toLocaleDateString("en-GB", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+  });
+  const [citiesData, setCitiesData] = useState<CitiesResponse[]>([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await CitiesRequest();
+        setCitiesData(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchData();
+  }, []);
+
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [creating, setCreating] = useState<boolean>(false);
   const [deletingCity, setDeletingCity] = useState<number | null>(null);
   const [editingCity, setEditingCity] = useState<number | null>(null);
-
   const handleCreateClick = () => {
     setCreating(true);
   };
@@ -93,31 +73,48 @@ const CitiesTable: React.FC = () => {
   };
 
   const handleCityCreate = (newCity: any) => {
-    setCities((prevCities) => [
-      ...prevCities,
-      { ...newCity, id: prevCities.length + 1 },
-    ]);
-    setCreating(false);
+    if (newCity && newCity.name) {
+      setCitiesData((prevCities) => [
+        ...prevCities,
+        { ...newCity },
+      ]);
+      setCreating(false);
+    } else {
+      console.error("Invalid city data. 'name' property is missing or undefined.");
+    }
   };
+  
 
   const handleCityDelete = (cityId: number) => {
     setDeletingCity(cityId);
   };
 
-  const confirmDeleteCity = () => {
-    setCities((prevCities) =>
-      prevCities.filter((city) => city.id !== deletingCity)
-    );
-    setDeletingCity(null);
-    handleClose();
+  const confirmDeleteCity = async () => {
+    try {
+      if (deletingCity) {
+        const token = localStorage.getItem("authToken");
+          await deleteCity(deletingCity, token);
+          setCitiesData((prevCities) =>
+          prevCities.filter((city) => city.id !== deletingCity)
+        );
+        setDeletingCity(null);
+        handleClose();
+        setSnackbarMessage("City deleted successfully");
+        setSnackbarSeverity("success");
+        setSnackbarOpen(true);      }
+    } catch (error) {
+      console.error("Error deleting city:", error);
+      setSnackbarMessage("Something wrong");
+      setSnackbarSeverity("error");
+      setSnackbarOpen(true);    }
   };
 
   const handleCityEdit = (cityId: number) => {
     setEditingCity(cityId);
   };
 
-  const filteredCities = cities.filter((city) => {
-    const searchFields = [city.name, city.country];
+  const filteredCities = citiesData.filter((city) => {
+    const searchFields = [city.name];
     const normalizedSearchTerm = searchTerm.toLowerCase();
     return searchFields.some((field) =>
       field.toLowerCase().includes(normalizedSearchTerm)
@@ -183,14 +180,14 @@ const CitiesTable: React.FC = () => {
           <EditCityForm
             onClose={handleClose}
             onCityEdit={(editedCity) => {
-              setCities((prevCities) =>
+              setCitiesData((prevCities) =>
                 prevCities.map((city) =>
                   city.id === editingCity ? { ...city, ...editedCity } : city
                 )
               );
               setEditingCity(null);
             }}
-            cityData={cities.find((city) => city.id === editingCity)}
+            cityData={citiesData.find((city) => city.id === editingCity)}
           />
         </DialogContent>
       </Dialog>
@@ -199,12 +196,10 @@ const CitiesTable: React.FC = () => {
         <Table>
           <TableHead>
             <TableRow>
+              <TableCell sx={{ fontWeight: "bold" }}>ID</TableCell>
               <TableCell sx={{ fontWeight: "bold" }}>Name</TableCell>
               <TableCell sx={{ fontWeight: "bold" }}>Country</TableCell>
               <TableCell sx={{ fontWeight: "bold" }}>Post Office</TableCell>
-              <TableCell sx={{ fontWeight: "bold" }}>
-                Number of Hotels
-              </TableCell>
               <TableCell sx={{ fontWeight: "bold" }}>Creation Date</TableCell>
               <TableCell sx={{ fontWeight: "bold" }}>
                 Modification Date
@@ -216,12 +211,12 @@ const CitiesTable: React.FC = () => {
           <TableBody>
             {filteredCities.map((city) => (
               <TableRow key={city.id}>
+                <TableCell>{city.id}</TableCell>
                 <TableCell>{city.name}</TableCell>
-                <TableCell>{city.country}</TableCell>
-                <TableCell>{city.postOffice}</TableCell>
-                <TableCell>{city.numberOfHotels}</TableCell>
-                <TableCell>{city.createDate}</TableCell>
-                <TableCell>{city.modifyDate}</TableCell>
+                <TableCell>World</TableCell>
+                <TableCell>NYPO</TableCell>
+                <TableCell>{formattedDate}</TableCell>
+                <TableCell>{formattedDate}</TableCell>
                 <TableCell>
                   <IconButton
                     color="primary"
@@ -243,6 +238,12 @@ const CitiesTable: React.FC = () => {
           </TableBody>
         </Table>
       </TableContainer>
+            <Snackbar open={snackbarOpen} onClose={handleSnackbarClose}>
+        <SnackbarContent
+          message={snackbarMessage}
+          sx={{ backgroundColor: snackbarSeverity === "success" ? "green" : "red" }}
+        />
+      </Snackbar>
     </Box>
   );
 };

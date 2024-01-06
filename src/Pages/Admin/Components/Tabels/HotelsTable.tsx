@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Table,
@@ -18,58 +18,46 @@ import {
   DialogContent,
   DialogContentText,
   DialogActions,
+  Snackbar,
+  SnackbarContent,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import SearchIcon from "@mui/icons-material/Search";
 import EditIcon from "@mui/icons-material/Edit";
 import CreateHotelForm from "../CreateForms/CreateHotelForm";
 import EditHotelForm from "../UpdatesForms/EditHotelForm";
+import { HotelsResponse } from "../../../../API/Admin/types";
+import { HotelsRequest, deleteHotel } from "../../../../API/Admin";
 
 const HotelsTable: React.FC = () => {
-  const hotelsData = [
-    {
-      id: 1,
-      name: "Grand Hotel",
-      starRate: 5,
-      owner: "Hotelier X",
-      roomNumber: 300,
-      createDate: "2022-01-01",
-      modifyDate: "2022-01-02",
-      city: "New York",
-    },
-    {
-      id: 2,
-      name: "Beach Resort",
-      starRate: 4,
-      owner: "Hotelier Y",
-      roomNumber: 150,
-      createDate: "2022-02-15",
-      modifyDate: "2022-03-01",
-      city: "London",
-    },
-    {
-      id: 3,
-      name: "City View Inn",
-      starRate: 3,
-      owner: "Hotelier Z",
-      roomNumber: 200,
-      createDate: "2022-03-10",
-      modifyDate: "2022-04-05",
-      city: "Tokyo",
-    },
-    {
-      id: 4,
-      name: "Mountain Lodge",
-      starRate: 4,
-      owner: "Hotelier W",
-      roomNumber: 120,
-      createDate: "2022-04-20",
-      modifyDate: "2022-05-15",
-      city: "Paris",
-    },
-  ];
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState("success");
 
-  const [hotels, setHotels] = useState([...hotelsData]);
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
+  };
+
+  const currentDate = new Date();
+  const formattedDate = currentDate.toLocaleDateString("en-GB", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+  });
+  const [hotelsData, setHotelsData] = useState<HotelsResponse[]>([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await HotelsRequest();
+        setHotelsData(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchData();
+  }, []);
+
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [creating, setCreating] = useState<boolean>(false);
   const [deletingHotel, setDeletingHotel] = useState<number | null>(null);
@@ -86,31 +74,46 @@ const HotelsTable: React.FC = () => {
   };
 
   const handleHotelCreate = (newHotel: any) => {
-    setHotels((prevHotels) => [
+    if (newHotel && newHotel.name) {
+      setHotelsData((prevHotels) => [
       ...prevHotels,
-      { ...newHotel, id: prevHotels.length + 1 },
+      { ...newHotel},
     ]);
     setCreating(false);
-  };
+  }else {
+    console.error("Invalid hotel data. 'name' property is missing or undefined.");
+  };}
 
   const handleHotelDelete = (hotelId: number) => {
     setDeletingHotel(hotelId);
   };
 
-  const confirmDeleteHotel = () => {
-    setHotels((prevHotels) =>
-      prevHotels.filter((hotel) => hotel.id !== deletingHotel)
-    );
-    setDeletingHotel(null);
-    handleClose();
+  const confirmDeleteHotel = async () => {
+    try {
+      if (deletingHotel) {
+        const token = localStorage.getItem("authToken");
+          await deleteHotel(deletingHotel, token);
+          setHotelsData((prevHotels) =>
+          prevHotels.filter((hotel) => hotel.id !== deletingHotel)
+        );
+        setDeletingHotel(null);
+        handleClose();
+        setSnackbarMessage("Hotel deleted successfully");
+        setSnackbarSeverity("success");
+        setSnackbarOpen(true);      }
+    } catch (error) {
+      console.error("Error deleting hotel:", error);
+      setSnackbarMessage("Something wrong");
+      setSnackbarSeverity("error");
+      setSnackbarOpen(true);    }
   };
 
   const handleHotelEdit = (hotelId: number) => {
     setEditingHotel(hotelId);
   };
 
-  const filteredHotels = hotels.filter((hotel) => {
-    const searchFields = [hotel.name, hotel.city];
+  const filteredHotels = hotelsData.filter((hotel) => {
+    const searchFields = [hotel.name];
     const normalizedSearchTerm = searchTerm.toLowerCase();
     return searchFields.some((field) =>
       field.toLowerCase().includes(normalizedSearchTerm)
@@ -174,7 +177,7 @@ const HotelsTable: React.FC = () => {
           <EditHotelForm
             onClose={handleClose}
             onHotelEdit={(editedHotel) => {
-              setHotels((prevHotels) =>
+              setHotelsData((prevHotels) =>
                 prevHotels.map((hotel) =>
                   hotel.id === editingHotel
                     ? { ...hotel, ...editedHotel }
@@ -183,7 +186,7 @@ const HotelsTable: React.FC = () => {
               );
               setEditingHotel(null);
             }}
-            hotelData={hotels.find((hotel) => hotel.id === editingHotel)}
+            hotelData={hotelsData.find((hotel) => hotel.id === editingHotel)}
           />
         </DialogContent>
       </Dialog>
@@ -191,11 +194,10 @@ const HotelsTable: React.FC = () => {
         <Table>
           <TableHead>
             <TableRow>
+              <TableCell sx={{ fontWeight: "bold" }}>ID</TableCell>
               <TableCell sx={{ fontWeight: "bold" }}>Name</TableCell>
-              <TableCell sx={{ fontWeight: "bold" }}>City</TableCell>
+              <TableCell sx={{ fontWeight: "bold" }}>Hotel Type</TableCell>
               <TableCell sx={{ fontWeight: "bold" }}>Star Rate</TableCell>
-              <TableCell sx={{ fontWeight: "bold" }}>Owner</TableCell>
-              <TableCell sx={{ fontWeight: "bold" }}>Room Number</TableCell>
               <TableCell sx={{ fontWeight: "bold" }}>Creation Date</TableCell>
               <TableCell sx={{ fontWeight: "bold" }}>
                 Modification Date
@@ -208,13 +210,12 @@ const HotelsTable: React.FC = () => {
           <TableBody>
             {filteredHotels.map((hotel) => (
               <TableRow key={hotel.id}>
+                <TableCell>{hotel.id}</TableCell>
                 <TableCell>{hotel.name}</TableCell>
-                <TableCell>{hotel.city}</TableCell>
-                <TableCell>{hotel.starRate}</TableCell>
-                <TableCell>{hotel.owner}</TableCell>
-                <TableCell>{hotel.roomNumber}</TableCell>
-                <TableCell>{hotel.createDate}</TableCell>
-                <TableCell>{hotel.modifyDate}</TableCell>
+                <TableCell>{hotel.hotelType}</TableCell>
+                <TableCell>{hotel.starRating}</TableCell>
+                <TableCell>{formattedDate}</TableCell>
+                <TableCell>{formattedDate}</TableCell>
                 <TableCell>
                   <IconButton
                     onClick={() => handleHotelDelete(hotel.id)}
@@ -236,6 +237,12 @@ const HotelsTable: React.FC = () => {
           </TableBody>
         </Table>
       </TableContainer>
+      <Snackbar open={snackbarOpen} onClose={handleSnackbarClose}>
+        <SnackbarContent
+          message={snackbarMessage}
+          sx={{ backgroundColor: snackbarSeverity === "success" ? "green" : "red" }}
+        />
+      </Snackbar>
     </Box>
   );
 };
