@@ -27,6 +27,11 @@ export interface CreateHotelProps{
   starRating: number;
 }
 
+export interface CreateRoomProps {
+  roomNumber: string;
+  cost: number
+}
+
 export interface CityHotelsResponse{
   id: number,
   name: string,
@@ -43,6 +48,7 @@ export interface amenities{
 }
 
 export interface HotelRoomsResponse{
+  roomId: number,
   roomNumber: number;
   roomPhotoUrl: string;
   roomType: string;

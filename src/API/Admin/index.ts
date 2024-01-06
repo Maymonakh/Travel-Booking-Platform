@@ -1,6 +1,6 @@
 import axios from "axios";
-import { hostURL } from "../constants";
-import { CitiesResponse, CreateCityProps, HotelsResponse } from "./types";
+import { CheckOutDate, checkInDate, hostURL } from "../constants";
+import { CreateCityProps, CreateHotelProps, CreateRoomProps} from "./types";
 
 
 export const HotelsRequest = async () => {
@@ -13,6 +13,10 @@ export const CitiesRequest = async () => {
 
 export const CityHotelsRequest = async (cityId:number | null ) => {
   return await axios.get(`${hostURL}/api/cities/${cityId}/hotels`);
+};
+
+export const HotelRoomsRequest = async (hotelId:number | null ) => {
+  return await axios.get(`${hostURL}/api/hotels/${hotelId}/rooms/?checkInDate=${checkInDate}&CheckOutDate=${CheckOutDate}`);
 };
 
 export const addCity = async (cityData: CreateCityProps, token: string | null) => {
@@ -29,18 +33,32 @@ export const deleteCity = async (cityId: number, token: string | null) => {
   return await axios.delete(`${hostURL}/api/cities/${cityId}`, { headers });
 };
 
-export const deleteHotel = async (hotelId: number, token: string | null) => {
+export const deleteHotel = async (cityId:number,hotelId: number, token: string | null) => {
   const headers = {
     Authorization: `Bearer ${token}`,
   };
-  return await axios.delete(`${hostURL}/api/hotels/${hotelId}`, { headers });
+  return await axios.delete(`${hostURL}/api/cities/${cityId}/hotels/${hotelId}`, { headers });
 };
 
-export const addHotel = async (hotelData: CreateCityProps, token: string | null) => {
+export const addHotel = async (cityId:number,hotelData: CreateHotelProps, token: string | null) => {
   const headers = {
     Authorization: `Bearer ${token}`,
   };
-  return await axios.post(`${hostURL}/api/cities`, hotelData, { headers });
+  return await axios.post(`${hostURL}/api/cities/${cityId}/hotels`, hotelData, { headers });
+};
+
+export const deleteRoom = async (hotelId:number,roomId: number, token: string | null) => {
+  const headers = {
+    Authorization: `Bearer ${token}`,
+  };
+  return await axios.delete(`${hostURL}/api/hotels/${hotelId}/rooms/${roomId}`, { headers });
+};
+
+export const addRoom = async (hotelId:number,roomData: CreateRoomProps, token: string | null) => {
+  const headers = {
+    Authorization: `Bearer ${token}`,
+  };
+  return await axios.post(`${hostURL}/api/hotels/${hotelId}/rooms`, roomData, { headers });
 };
 
 // export const HotelRequest = async (searchRequest: HotelsResponse) => {
@@ -49,16 +67,13 @@ export const addHotel = async (hotelData: CreateCityProps, token: string | null)
 //   });
 // };
 
-export const CityRequest = async (searchRequest: CitiesResponse) => {
-  return await axios.get<CitiesResponse[]>(`${hostURL}/api/cities`, {
-    params: searchRequest,
-  });
-};
+// export const CityRequest = async (searchRequest: CitiesResponse) => {
+//   return await axios.get<CitiesResponse[]>(`${hostURL}/api/cities`, {
+//     params: searchRequest,
+//   });
+// };
 
 
 
-export const HotelRoomsRequest = async (hotelId:number | null ) => {
-  return await axios.get(`${hostURL}/api/hotels/${hotelId}/rooms`);
-};
 
 

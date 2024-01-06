@@ -9,10 +9,13 @@ import {
   Snackbar,
   SnackbarContent,
 } from "@mui/material";
+import { addHotel } from "../../../../API/Admin";
+
 
 interface CreateHotelFormProps {
   onClose: () => void;
   onHotelCreate: (hotel: any) => void;
+  cityId:number
 }
 
 const validationSchema = yup.object({
@@ -33,8 +36,8 @@ const validationSchema = yup.object({
 const CreateHotelForm: React.FC<CreateHotelFormProps> = ({
   onClose,
   onHotelCreate,
+  cityId,
 }) => {
-
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [snackbarSeverity, setSnackbarSeverity] = useState("success");
@@ -42,16 +45,29 @@ const CreateHotelForm: React.FC<CreateHotelFormProps> = ({
     initialValues: {
       name: "",
       description: "",
-      hotelType: null,
-      starRating: null,
+      hotelType: 0,
+      starRating: 0,
     },
     validationSchema: validationSchema,
-    onSubmit: (values, { setSubmitting, resetForm }) => {
-      console.log("Form submitted", values);
-      setSubmitting(false);
-      resetForm();
-      onClose();
-      onHotelCreate(values);
+    onSubmit: async (values, { setSubmitting, resetForm }) => {
+      try {
+        const token = localStorage.getItem("authToken");
+        const response = await addHotel(cityId,values,token);
+        console.log("Hotel created successfully:", response.data);
+        onHotelCreate(response.data);
+        setSnackbarMessage("Hotel created successfully");
+        setSnackbarSeverity("success");
+        setSnackbarOpen(true);
+      } catch (error) {
+        console.error("Error creating hotel:", error);
+        setSnackbarMessage("Error creating hotel");
+        setSnackbarSeverity("error");
+        setSnackbarOpen(true);
+      } finally {
+        setSubmitting(false);
+        resetForm();
+        onClose();
+      }
     },
   });
 

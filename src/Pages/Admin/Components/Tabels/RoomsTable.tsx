@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Table,
@@ -18,67 +18,51 @@ import {
   DialogContent,
   DialogContentText,
   DialogActions,
+  Snackbar,
+  SnackbarContent,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import SearchIcon from "@mui/icons-material/Search";
 import EditIcon from "@mui/icons-material/Edit";
 import CreateRoomForm from "../CreateForms/CreateRoomForm";
 import EditRoomForm from "../UpdatesForms/EditRoomForm";
+import { HotelRoomsResponse } from "../../../../API/Admin/types";
+import { deleteRoom } from "../../../../API/Admin";
 
-const RoomsTable: React.FC = () => {
-  const roomsData = [
-    {
-      id: 1,
-      number: 101,
-      availability: true,
-      adultCapacity: 2,
-      childrenCapacity: 1,
-      createDate: "2022-01-01",
-      modifyDate: "2022-01-02",
-      hotelName: "Comfort Suites",
-      city: "New York",
-    },
-    {
-      id: 2,
-      number: 201,
-      availability: false,
-      adultCapacity: 3,
-      childrenCapacity: 2,
-      createDate: "2022-02-15",
-      modifyDate: "2022-03-01",
-      hotelName: "Grand Hotel",
-      city: "Los Angeles",
-    },
-    {
-      id: 3,
-      number: 301,
-      availability: true,
-      adultCapacity: 2,
-      childrenCapacity: 1,
-      createDate: "2022-03-10",
-      modifyDate: "2022-04-05",
-      hotelName: "City View Inn",
-      city: "Chicago",
-    },
-    {
-      id: 4,
-      number: 102,
-      availability: true,
-      adultCapacity: 1,
-      childrenCapacity: 0,
-      createDate: "2022-04-20",
-      modifyDate: "2022-05-15",
-      hotelName: "Downtown Suites",
-      city: "San Francisco",
-    },
-  ];
+const RoomsTable = ({
+  roomsData,
+  hotelId,
+}: {
+  roomsData: HotelRoomsResponse[];
+  hotelId: number;
+}) => {
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState("success");
 
-  const [rooms, setRooms] = useState([...roomsData]);
+  const [rooms, setRooms] = useState(roomsData);
+  useEffect(() => {
+    setRooms(roomsData);
+  }, [roomsData]);
+  console.log(hotelId);
+  console.log(rooms);
+  console.log(roomsData);
+
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
+  };
+
+  const currentDate = new Date();
+  const formattedDate = currentDate.toLocaleDateString("en-GB", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+  });
+
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [creating, setCreating] = useState<boolean>(false);
   const [deletingRoom, setDeletingRoom] = useState<number | null>(null);
   const [editingRoom, setEditingRoom] = useState<number | null>(null);
-  const [editing, setEditing] = useState<boolean>(false);
 
   const handleCreateClick = () => {
     setCreating(true);
@@ -87,37 +71,52 @@ const RoomsTable: React.FC = () => {
   const handleClose = () => {
     setCreating(false);
     setDeletingRoom(null);
-    setEditing(false);
     setEditingRoom(null);
   };
 
   const handleRoomCreate = (newRoom: any) => {
-    setRooms((prevRooms) => [
-      ...prevRooms,
-      { ...newRoom, id: prevRooms.length + 1 },
-    ]);
-    setCreating(false);
+    if (newRoom && newRoom.roomNumber) {
+      setRooms((prevRooms) => [...prevRooms, { ...newRoom }]);
+      setCreating(false);
+    } else {
+      console.error(
+        "Invalid room data. 'Room Number' property is missing or undefined."
+      );
+    }
   };
 
   const handleRoomDelete = (roomId: number) => {
     setDeletingRoom(roomId);
   };
 
-  const confirmDeleteRoom = () => {
-    setRooms((prevRooms) =>
-      prevRooms.filter((room) => room.id !== deletingRoom)
-    );
-    setDeletingRoom(null);
-    handleClose();
+  const confirmDeleteRoom = async () => {
+    try {
+      if (deletingRoom) {
+        const token = localStorage.getItem("authToken");
+        await deleteRoom(hotelId, deletingRoom, token);
+        setRooms((prevRooms) =>
+          prevRooms.filter((room) => room.roomId !== deletingRoom)
+        );
+        setDeletingRoom(null);
+        handleClose();
+        setSnackbarMessage("Room deleted successfully");
+        setSnackbarSeverity("success");
+        setSnackbarOpen(true);
+      }
+    } catch (error) {
+      console.error("Error deleting room:", error);
+      setSnackbarMessage("Something wrong");
+      setSnackbarSeverity("error");
+      setSnackbarOpen(true);
+    }
   };
 
   const handleRoomEdit = (roomId: number) => {
     setEditingRoom(roomId);
-    setEditing(true);
   };
 
   const filteredRooms = rooms.filter((room) => {
-    const searchFields = [room.number.toString(), room.city, room.hotelName];
+    const searchFields = [room.roomNumber.toString()];
     const normalizedSearchTerm = searchTerm.toLowerCase();
     return searchFields.some((field) =>
       field.toLowerCase().includes(normalizedSearchTerm)
@@ -144,7 +143,7 @@ const RoomsTable: React.FC = () => {
             }}
           />
         </Grid>
-        <Grid xs={1} alignSelf={"center"} marginLeft={4}>
+        <Grid xs={1} alignSelf={"center"} marginLeft={2}>
           <Button variant="contained" onClick={handleCreateClick}>
             Create
           </Button>
@@ -156,11 +155,11 @@ const RoomsTable: React.FC = () => {
           <CreateRoomForm
             onClose={handleClose}
             onRoomCreate={handleRoomCreate}
+            hotelId={hotelId}
           />
         </DialogContent>
       </Dialog>
-
-       <Dialog open={deletingRoom !== null} onClose={handleClose}>
+      <Dialog open={deletingRoom !== null} onClose={handleClose}>
         <DialogTitle>Confirm Deletion</DialogTitle>
         <DialogContent>
           <DialogContentText>
@@ -176,25 +175,30 @@ const RoomsTable: React.FC = () => {
           </Button>
         </DialogActions>
       </Dialog>
-
-      <Dialog open={editing} onClose={handleClose}>
+      <Dialog open={editingRoom !== null} onClose={handleClose}>
         <DialogTitle>Edit Room</DialogTitle>
         <DialogContent>
           <EditRoomForm
             onClose={handleClose}
-            onRoomEdit={handleRoomEdit}
-            roomData={rooms.find((room) => room.id === editingRoom)}
+            onRoomEdit={(editedRoom) => {
+              setRooms((prevRooms) =>
+                prevRooms.map((room) =>
+                  room.roomId === editingRoom ? { ...room, ...editedRoom } : room
+                )
+              );
+              setEditingRoom(null);
+            }}
+            roomData={rooms.find((room) => room.roomId === editingRoom)}
           />
         </DialogContent>
       </Dialog>
-
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell sx={{ fontWeight: "bold" }}>City</TableCell>
-              <TableCell sx={{ fontWeight: "bold" }}>Hotel</TableCell>
+              <TableCell sx={{ fontWeight: "bold" }}>roomId</TableCell>
               <TableCell sx={{ fontWeight: "bold" }}>Room Number</TableCell>
+              <TableCell sx={{ fontWeight: "bold" }}>Price</TableCell>
               <TableCell sx={{ fontWeight: "bold" }}>Availability</TableCell>
               <TableCell sx={{ fontWeight: "bold" }}>Adult Capacity</TableCell>
               <TableCell sx={{ fontWeight: "bold" }}>
@@ -210,18 +214,18 @@ const RoomsTable: React.FC = () => {
           </TableHead>
           <TableBody>
             {filteredRooms.map((room) => (
-              <TableRow key={room.id}>
-                <TableCell>{room.city}</TableCell>
-                <TableCell>{room.hotelName}</TableCell>
-                <TableCell>{room.number}</TableCell>
+              <TableRow key={room.roomId}>
+                <TableCell>{room.roomId}</TableCell>
+                <TableCell>{room.roomNumber}</TableCell>
+                <TableCell>{room.price}</TableCell>
                 <TableCell>{room.availability ? "Yes" : "No"}</TableCell>
-                <TableCell>{room.adultCapacity}</TableCell>
-                <TableCell>{room.childrenCapacity}</TableCell>
-                <TableCell>{room.createDate}</TableCell>
-                <TableCell>{room.modifyDate}</TableCell>
+                <TableCell>{room.capacityOfAdults}</TableCell>
+                <TableCell>{room.capacityOfChildren}</TableCell>
+                <TableCell>{formattedDate}</TableCell>
+                <TableCell>{formattedDate}</TableCell>
                 <TableCell>
                   <IconButton
-                    onClick={() => handleRoomDelete(room.id)}
+                    onClick={() => handleRoomDelete(room.roomId)}
                     color="primary"
                   >
                     <DeleteIcon />
@@ -229,7 +233,7 @@ const RoomsTable: React.FC = () => {
                 </TableCell>
                 <TableCell>
                   <IconButton
-                    onClick={() => handleRoomEdit(room.id)}
+                    onClick={() => handleRoomEdit(room.roomId)}
                     color="primary"
                   >
                     <EditIcon />
@@ -240,6 +244,14 @@ const RoomsTable: React.FC = () => {
           </TableBody>
         </Table>
       </TableContainer>
+      <Snackbar open={snackbarOpen} onClose={handleSnackbarClose}>
+        <SnackbarContent
+          message={snackbarMessage}
+          sx={{
+            backgroundColor: snackbarSeverity === "success" ? "green" : "red",
+          }}
+        />
+      </Snackbar>
     </Box>
   );
 };
