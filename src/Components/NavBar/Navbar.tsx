@@ -15,7 +15,7 @@ const pages = ["Home", "Search", "Checkout"];
 
 const Navbar: React.FC = () => {
   const navigate = useNavigate();
-    const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
+  const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null
   );
   const [isLoggedIn, setIsLoggedIn] = useState(true);
@@ -104,10 +104,7 @@ const Navbar: React.FC = () => {
             }}
           >
             {pages.map((page) => (
-              <MenuItem
-                key={page}
-                onClick={() => handleNavigation(`/${page}`)}
-              >
+              <MenuItem key={page} onClick={() => handleNavigation(`/${page}`)}>
                 <Typography textAlign="center">{page}</Typography>
               </MenuItem>
             ))}
@@ -131,6 +128,14 @@ const Navbar: React.FC = () => {
         >
           SAFAR.com
         </Typography>
+        {isLoggedIn && (
+          <Button
+            onClick={handleLogout}
+            sx={{ my: 2, color: "black", display: "block" }}
+          >
+            Logout
+          </Button>
+        )}
         <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
           {pages.map((page) => (
             <Button

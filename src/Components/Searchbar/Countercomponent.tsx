@@ -20,7 +20,8 @@ const Countercomponent: React.FC<CountercomponentProps> = ({
     <Grid
       container
       item
-      xs={2}
+      lg={2}
+      xs={4}
       sx={{ border: "1px solid #ddd", borderRadius: 1, padding: 1 }}
     >
       <Typography variant="subtitle1" sx={{ flexGrow: 0 ,margin:0.5}}>

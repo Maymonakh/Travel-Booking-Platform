@@ -10,13 +10,23 @@ import Drawer from "@mui/material/Drawer";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
+import { useNavigate } from "react-router";
 
 interface AdminNavBarProps {
   onMenuItemClick: (menuItem: string) => void;
 }
 
 const AdminNavBar: React.FC<AdminNavBarProps> = ({ onMenuItemClick }) => {
+  const navigate = useNavigate();
   const [drawerOpen, setDrawerOpen] = useState<boolean>(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(true);
+
+  const handleLogout = () => {
+    localStorage.removeItem("authToken");
+    localStorage.removeItem("userType");
+    setIsLoggedIn(false);
+    navigate("/");
+  };
 
   const toggleDrawer = (open: boolean) => () => {
     setDrawerOpen(open);
@@ -57,19 +67,27 @@ const AdminNavBar: React.FC<AdminNavBarProps> = ({ onMenuItemClick }) => {
           >
             Admin Page
           </Typography>
+          {isLoggedIn && (
+            <Button
+              onClick={handleLogout}
+              sx={{ my: 2, color: "black", display: "block" }}
+            >
+              Logout
+            </Button>
+          )}
         </Toolbar>
       </AppBar>
 
       <Drawer anchor="left" open={drawerOpen} onClose={toggleDrawer(false)}>
-        <List sx={{ width: 200,marginTop:6,marginLeft:3}}>
+        <List sx={{ width: 200, marginTop: 6, marginLeft: 3 }}>
           <ListItem button onClick={() => handleMenuItemClick("Cities")}>
-            <ListItemText sx={{ marginBottom:3}} primary="Cities" />
+            <ListItemText sx={{ marginBottom: 3 }} primary="Cities" />
           </ListItem>
           <ListItem button onClick={() => handleMenuItemClick("Hotels")}>
-            <ListItemText sx={{ marginBottom:3}} primary="Hotels" />
+            <ListItemText sx={{ marginBottom: 3 }} primary="Hotels" />
           </ListItem>
           <ListItem button onClick={() => handleMenuItemClick("Rooms")}>
-            <ListItemText sx={{ marginBottom:3}} primary="Rooms" />
+            <ListItemText sx={{ marginBottom: 3 }} primary="Rooms" />
           </ListItem>
         </List>
       </Drawer>
