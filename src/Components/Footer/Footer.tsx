@@ -7,7 +7,7 @@ const Footer: React.FC = () => {
     sx={{
       backgroundColor: "white",
       height: 60,
-      marginTop: 10,
+      marginTop:6,
       borderTopRightRadius: 20,
       borderTopLeftRadius: 20,
       display: "flex",

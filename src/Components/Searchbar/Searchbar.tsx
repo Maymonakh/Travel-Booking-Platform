@@ -42,7 +42,9 @@ const Searchbar: React.FC = () => {
   };
 
   const validateAndSearch = async () => {
-    const today = new Date();
+    const date = new Date();
+    const today = new Date(date);
+    today.setDate(today.getDate() - 1);
     const selectedCheckInDate = new Date(checkInDate);
     const selectedCheckOutDate = new Date(checkOutDate);
 
@@ -103,7 +105,7 @@ const Searchbar: React.FC = () => {
           />
         </Grid>
 
-        <Grid item lg={2} xs={2} >
+        <Grid item lg={2} xs={2}>
           <Button
             variant="contained"
             color="primary"

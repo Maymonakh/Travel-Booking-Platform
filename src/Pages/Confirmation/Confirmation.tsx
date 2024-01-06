@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Typography, Container, Grid, Button } from "@mui/material";
+import SendIcon from "@mui/icons-material/Send";
 import jsPDF from "jspdf";
 import { useLocation } from "react-router-dom";
 import { BookingResponse } from "../../API/Checkout/types";
@@ -57,62 +58,76 @@ const Confirmation: React.FC = () => {
           borderRadius: 5,
         }}
       >
-        <Typography variant="h4" marginBottom={10}>
+        <Typography variant="h4" marginBottom={7} paddingLeft={5}>
           Booking Confirmation
         </Typography>
 
         {loading ? (
           <Typography variant="body1">Loading...</Typography>
         ) : (
-          <>
-            <Grid container spacing={2}>
-              <Grid item xs={12}>
-                <Typography variant="h6">
-                  Customer Name: {bookingData?.customerName}
-                </Typography>
-              </Grid>
+          <Grid container paddingLeft={5} flexDirection={"column"} gap={3}>
+            <Grid item xs={12} md={6} display="flex" gap={2}>
+              <SendIcon fontSize="medium" color="primary" />
+              <Typography variant="h6" fontWeight="bold">
+                Customer Name:
+              </Typography>
+              <Typography variant="h6">{bookingData?.customerName}</Typography>
+            </Grid>
 
-              <Grid item xs={12}>
-                <Typography variant="h6">
-                  Hotel Name: {bookingData?.hotelName}
-                </Typography>
-              </Grid>
+            <Grid item xs={12} md={6} display="flex" gap={2}>
+              <SendIcon fontSize="medium" color="primary" />
+              <Typography variant="h6" fontWeight="bold">
+                Hotel Name:
+              </Typography>
+              <Typography variant="h6">{bookingData?.hotelName}</Typography>
+            </Grid>
+            <Grid item xs={12} md={6} display="flex" gap={2}>
+              <SendIcon fontSize="medium" color="primary" />
+              <Typography variant="h6" fontWeight="bold">
+                Room Number:
+              </Typography>
+              <Typography variant="h6">{bookingData?.roomNumber}</Typography>
+            </Grid>
 
-              <Grid item xs={12}>
-                <Typography variant="h6">
-                  Room Number: {bookingData?.roomNumber}
-                </Typography>
-              </Grid>
+            <Grid item xs={12} md={6} display="flex" gap={2}>
+              <SendIcon fontSize="medium" color="primary" />
+              <Typography variant="h6" fontWeight="bold">
+                Room Type:
+              </Typography>
+              <Typography variant="h6">{bookingData?.roomType}</Typography>
+            </Grid>
 
-              <Grid item xs={12}>
-                <Typography variant="h6">
-                  Room Type: {bookingData?.roomType}
-                </Typography>
-              </Grid>
+            <Grid item xs={12} md={6} display="flex" gap={2}>
+              <SendIcon fontSize="medium" color="primary" />
+              <Typography variant="h6" fontWeight="bold">
+                Booking Date and Time:
+              </Typography>
+              <Typography variant="h6">
+                {bookingData?.bookingDateTime}
+              </Typography>
+            </Grid>
 
-              <Grid item xs={12}>
-                <Typography variant="h6">
-                  Booking Date and Time: {bookingData?.bookingDateTime}
-                </Typography>
-              </Grid>
+            <Grid item xs={12} md={6} display="flex" gap={2}>
+              <SendIcon fontSize="medium" color="primary" />
+              <Typography variant="h6" fontWeight="bold">
+                Total Cost:
+              </Typography>
+              <Typography variant="h6">${bookingData?.totalCost}</Typography>
+            </Grid>
+            <Grid item xs={12} md={6} display="flex" gap={2}>
+              <SendIcon fontSize="medium" color="primary" />
+              <Typography variant="h6" fontWeight="bold">
+                Payment Method:
+              </Typography>
+              <Typography variant="h6">{bookingData?.paymentMethod}</Typography>
+            </Grid>
 
-              <Grid item xs={12}>
-                <Typography variant="h6">
-                  Total Cost: ${bookingData?.totalCost}
-                </Typography>
-              </Grid>
-
-              <Grid item xs={12}>
-                <Typography variant="h6">
-                  Payment Method: {bookingData?.paymentMethod}
-                </Typography>
-              </Grid>
-
-              <Grid item xs={12}>
-                <Typography variant="h6">
-                  Booking Status: {bookingData?.bookingStatus}
-                </Typography>
-              </Grid>
+            <Grid item xs={12} md={6} display="flex" gap={2}>
+              <SendIcon fontSize="medium" color="primary" />
+              <Typography variant="h6" fontWeight="bold">
+                Booking Status:
+              </Typography>
+              <Typography variant="h6">{bookingData?.bookingStatus}</Typography>
             </Grid>
 
             <Grid container spacing={2} justifyContent="center" marginTop={5}>
@@ -135,7 +150,7 @@ const Confirmation: React.FC = () => {
                 </Button>
               </Grid>
             </Grid>
-          </>
+          </Grid>
         )}
       </Container>
     </Grid>
