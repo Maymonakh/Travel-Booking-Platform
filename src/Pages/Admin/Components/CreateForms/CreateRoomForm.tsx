@@ -26,17 +26,16 @@ const validationSchema = yup.object({
     .integer("Room Number must be an integer"),
   cost: yup
     .number()
-    .required("Room Number is required")
-    .integer("Room Number must be an integer"),
+    .required("Cost is required")
+    .integer("Cost must be an integer"),
   availability: yup
     .string()
-    .required("Availability is required")
-    .oneOf(["yes", "no"]),
-  adultCapacity: yup
+    .required("Availability is required"),
+  capacityOfAdults: yup
     .number()
     .required("Adult Capacity is required")
     .integer("Adult Capacity must be an integer"),
-  childrenCapacity: yup
+  capacityOfChildren: yup
     .number()
     .required("Children Capacity is required")
     .integer("Children Capacity must be an integer"),
@@ -54,9 +53,9 @@ const CreateRoomForm: React.FC<CreateRoomFormProps> = ({
     initialValues: {
       roomNumber: "",
       cost: 0,
-      availability: 0,
-      adultCapacity: 0,
-      childrenCapacity: 0,
+      availability: "Yes",
+      capacityOfAdults: 0,
+      capacityOfChildren: 0,
     },
     validationSchema: validationSchema,
     onSubmit: async (values, { setSubmitting, resetForm }) => {
@@ -129,12 +128,12 @@ const CreateRoomForm: React.FC<CreateRoomFormProps> = ({
           variant="outlined"
           fullWidth
           margin="normal"
-          {...formik.getFieldProps("adultCapacity")}
+          {...formik.getFieldProps("capacityOfAdults")}
           error={
-            formik.touched.adultCapacity && Boolean(formik.errors.adultCapacity)
+            formik.touched.capacityOfAdults && Boolean(formik.errors.capacityOfAdults)
           }
           helperText={
-            formik.touched.adultCapacity && formik.errors.adultCapacity
+            formik.touched.capacityOfAdults && formik.errors.capacityOfAdults
           }
         />
         <TextField
@@ -142,13 +141,13 @@ const CreateRoomForm: React.FC<CreateRoomFormProps> = ({
           variant="outlined"
           fullWidth
           margin="normal"
-          {...formik.getFieldProps("childrenCapacity")}
+          {...formik.getFieldProps("capacityOfChildren")}
           error={
-            formik.touched.childrenCapacity &&
-            Boolean(formik.errors.childrenCapacity)
+            formik.touched.capacityOfChildren &&
+            Boolean(formik.errors.capacityOfChildren)
           }
           helperText={
-            formik.touched.childrenCapacity && formik.errors.childrenCapacity
+            formik.touched.capacityOfChildren && formik.errors.capacityOfChildren
           }
         />
 

@@ -20,27 +20,33 @@ import {
   DialogActions,
   Snackbar,
   SnackbarContent,
+  Drawer,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import SearchIcon from "@mui/icons-material/Search";
 import EditIcon from "@mui/icons-material/Edit";
 import CreateHotelForm from "../CreateForms/CreateHotelForm";
 import EditHotelForm from "../UpdatesForms/EditHotelForm";
-import { CityHotelsResponse} from "../../../../API/Admin/types";
+import { CityHotelsResponse } from "../../../../API/Admin/types";
 import { deleteHotel } from "../../../../API/Admin";
 
-const HotelsTable= ({hotelsData ,cityId}: { hotelsData:  CityHotelsResponse[],cityId:number }) => {
+const HotelsTable = ({
+  hotelsData,
+  cityId,
+}: {
+  hotelsData: CityHotelsResponse[];
+  cityId: number;
+}) => {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [snackbarSeverity, setSnackbarSeverity] = useState("success");
-  
+
   const [hotels, setHotels] = useState(hotelsData);
   useEffect(() => {
     setHotels(hotelsData);
   }, [hotelsData]);
   console.log(hotels);
   console.log(hotelsData);
-
 
   const handleSnackbarClose = () => {
     setSnackbarOpen(false);
@@ -52,7 +58,6 @@ const HotelsTable= ({hotelsData ,cityId}: { hotelsData:  CityHotelsResponse[],ci
     month: "2-digit",
     year: "numeric",
   });
-
 
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [creating, setCreating] = useState<boolean>(false);
@@ -71,14 +76,14 @@ const HotelsTable= ({hotelsData ,cityId}: { hotelsData:  CityHotelsResponse[],ci
 
   const handleHotelCreate = (newHotel: any) => {
     if (newHotel && newHotel.name) {
-      setHotels((prevHotels) => [
-      ...prevHotels,
-      { ...newHotel},
-    ]);
-    setCreating(false);
-  }else {
-    console.error("Invalid hotel data. 'name' property is missing or undefined.");
-  };}
+      setHotels((prevHotels) => [...prevHotels, { ...newHotel }]);
+      setCreating(false);
+    } else {
+      console.error(
+        "Invalid hotel data. 'name' property is missing or undefined."
+      );
+    }
+  };
 
   const handleHotelDelete = (hotelId: number) => {
     setDeletingHotel(hotelId);
@@ -88,20 +93,22 @@ const HotelsTable= ({hotelsData ,cityId}: { hotelsData:  CityHotelsResponse[],ci
     try {
       if (deletingHotel) {
         const token = localStorage.getItem("authToken");
-          await deleteHotel(cityId,deletingHotel, token);
-          setHotels((prevHotels) =>
+        await deleteHotel(cityId, deletingHotel, token);
+        setHotels((prevHotels) =>
           prevHotels.filter((hotel) => hotel.id !== deletingHotel)
         );
         setDeletingHotel(null);
         handleClose();
         setSnackbarMessage("Hotel deleted successfully");
         setSnackbarSeverity("success");
-        setSnackbarOpen(true);      }
+        setSnackbarOpen(true);
+      }
     } catch (error) {
       console.error("Error deleting hotel:", error);
       setSnackbarMessage("Something wrong");
       setSnackbarSeverity("error");
-      setSnackbarOpen(true);    }
+      setSnackbarOpen(true);
+    }
   };
 
   const handleHotelEdit = (hotelId: number) => {
@@ -168,7 +175,12 @@ const HotelsTable= ({hotelsData ,cityId}: { hotelsData:  CityHotelsResponse[],ci
           </Button>
         </DialogActions>
       </Dialog>
-      <Dialog open={editingHotel !== null} onClose={handleClose}>
+      <Drawer
+        anchor="right"
+        open={editingHotel !== null}
+        onClose={handleClose}
+        sx={{ width: 50 }}
+      >
         <DialogTitle>Edit Hotel</DialogTitle>
         <DialogContent>
           <EditHotelForm
@@ -186,7 +198,8 @@ const HotelsTable= ({hotelsData ,cityId}: { hotelsData:  CityHotelsResponse[],ci
             hotelData={hotels.find((hotel) => hotel.id === editingHotel)}
           />
         </DialogContent>
-      </Dialog>
+      </Drawer>
+
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
@@ -237,7 +250,9 @@ const HotelsTable= ({hotelsData ,cityId}: { hotelsData:  CityHotelsResponse[],ci
       <Snackbar open={snackbarOpen} onClose={handleSnackbarClose}>
         <SnackbarContent
           message={snackbarMessage}
-          sx={{ backgroundColor: snackbarSeverity === "success" ? "green" : "red" }}
+          sx={{
+            backgroundColor: snackbarSeverity === "success" ? "green" : "red",
+          }}
         />
       </Snackbar>
     </Box>

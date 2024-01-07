@@ -20,6 +20,7 @@ import {
   DialogContentText,
   Snackbar,
   SnackbarContent,
+  Drawer,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import SearchIcon from "@mui/icons-material/Search";
@@ -174,23 +175,22 @@ const CitiesTable: React.FC = () => {
         </DialogActions>
       </Dialog>
 
-      <Dialog open={editingCity !== null} onClose={handleClose}>
-        <DialogTitle>Edit City</DialogTitle>
-        <DialogContent>
-          <EditCityForm
-            onClose={handleClose}
-            onCityEdit={(editedCity) => {
-              setCitiesData((prevCities) =>
-                prevCities.map((city) =>
-                  city.id === editingCity ? { ...city, ...editedCity } : city
-                )
-              );
-              setEditingCity(null);
-            }}
-            cityData={citiesData.find((city) => city.id === editingCity)}
-          />
-        </DialogContent>
-      </Dialog>
+      <Drawer anchor="right" open={editingCity !== null} onClose={handleClose} sx={{ width: 50}}>
+      <DialogTitle>Edit City</DialogTitle>
+      <DialogContent>
+        <EditCityForm
+          onClose={handleClose}
+          onCityEdit={(editedCity) => {
+            setCitiesData((prevCities) =>
+              prevCities.map((city) =>
+                city.id === editingCity ? { ...city, ...editedCity } : city
+              )
+            );
+          }}
+          cityData={citiesData.find((city) => city.id === editingCity)}
+        />
+      </DialogContent>
+    </Drawer>
 
       <TableContainer component={Paper}>
         <Table>

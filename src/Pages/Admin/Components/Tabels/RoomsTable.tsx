@@ -20,6 +20,7 @@ import {
   DialogActions,
   Snackbar,
   SnackbarContent,
+  Drawer,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import SearchIcon from "@mui/icons-material/Search";
@@ -175,7 +176,12 @@ const RoomsTable = ({
           </Button>
         </DialogActions>
       </Dialog>
-      <Dialog open={editingRoom !== null} onClose={handleClose}>
+      <Drawer
+        anchor="right"
+        open={editingRoom !== null}
+        onClose={handleClose}
+        sx={{ width: 50 }}
+      >
         <DialogTitle>Edit Room</DialogTitle>
         <DialogContent>
           <EditRoomForm
@@ -183,7 +189,9 @@ const RoomsTable = ({
             onRoomEdit={(editedRoom) => {
               setRooms((prevRooms) =>
                 prevRooms.map((room) =>
-                  room.roomId === editingRoom ? { ...room, ...editedRoom } : room
+                  room.roomId === editingRoom
+                    ? { ...room, ...editedRoom }
+                    : room
                 )
               );
               setEditingRoom(null);
@@ -191,7 +199,8 @@ const RoomsTable = ({
             roomData={rooms.find((room) => room.roomId === editingRoom)}
           />
         </DialogContent>
-      </Dialog>
+      </Drawer>
+
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
