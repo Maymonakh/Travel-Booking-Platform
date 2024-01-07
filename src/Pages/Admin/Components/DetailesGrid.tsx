@@ -63,6 +63,7 @@ const DetailsGrid: React.FC<DetailsGridProps> = ({ entityType }) => {
         paddingTop: 5,
         paddingBottom: 2,
         borderRadius: 5,
+        overflowX:"auto"
       }}
     >
       {entityType === "Cities" ? (

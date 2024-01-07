@@ -29,7 +29,7 @@ const SearchedHotels = () => {
         direction="row"
         sx={{
           maxHeight: 800,
-          overflowX: "scroll",
+          overflowX:"auto",
           padding: 3,
         }}
       >
