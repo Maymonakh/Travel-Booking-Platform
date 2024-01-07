@@ -33,11 +33,11 @@ Welcome to our <strong>Travel and Accommodation Booking Platform!</strong> This 
 Home page is designed to simplify your search process.Lets you easily find hotels, cities, and more. Featured Deals highlight special offers, and shows your recently visited hotels. Trending Destination Highlights provide inspiration for your next adventure.</p>
 <br>
 
-![Alt text](image.png)
+![Alt text](Screenshots/image.png)
 
 <br>
 
-![Alt text](image-4.png)
+![Alt text](Screenshots/image-4.png)
 
 <h4>Hotel Page : </h4>
 
@@ -45,24 +45,24 @@ Home page is designed to simplify your search process.Lets you easily find hotel
 
 <br>
 
-![Alt text](image-1.png)
+![Alt text](Screenshots/image-1.png)
 
 <h4>Checkout and Confirmation Pages : </h4>
 <p> Experience a secure and convenient checkout process. Provide your personal information and payment details in a user-friendly form. The confirmation page summarizes your booking details, allowing you to print or save the confirmation as a PDF for your records. </p>
 
 <br>
 
-![Alt text](image-2.png)
+![Alt text](Screenshots/image-2.png)
 <br>
 
-![Alt text](image-3.png)
+![Alt text](Screenshots/image-3.png)
 
 <h4>Admin Page for Easy Management : </h4>
 <p>For administrators, our platform offers a streamlined management experience. Navigate through functional left-side navigation, use the admin search bar, and access detailed grids for cities, hotels, and rooms. The creation and update forms make managing your inventory effortless.</p>
 
 <br>
 
-![Alt text](image-5.png)
+![Alt text](Screenshots/image-5.png)
  
 <hr>
 
