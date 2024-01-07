@@ -1,17 +1,33 @@
+import React, { useState } from "react";
 import "./LoginForm.css";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
 import { LoginRequestProps } from "../../../API/Authentication/types";
 import { loginRequest } from "../../../API/Authentication";
+import Snackbar from "@mui/material/Snackbar";
+import MuiAlert, { AlertColor } from "@mui/material/Alert";
 
 const schema = Yup.object().shape({
-  userName: Yup.string().required("user name is a required field"),
+  userName: Yup.string().required("Username is a required field"),
   password: Yup.string().required("Password is a required field"),
 });
 
 const LoginForm: React.FC = () => {
   const navigate = useNavigate();
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState<AlertColor | undefined>("error"); 
+
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
+  };
+
+  const showAlert = (message: string, severity: AlertColor) => { 
+    setSnackbarMessage(message);
+    setSnackbarSeverity(severity);
+    setSnackbarOpen(true);
+  };
 
   const handleSubmit = async (values: LoginRequestProps) => {
     try {
@@ -28,8 +44,10 @@ const LoginForm: React.FC = () => {
       }
     } catch (error) {
       console.error("Login failed", error);
+      showAlert("Login failed. Please check your credentials.", "error");
     }
   };
+
   return (
     <>
       <Formik
@@ -80,6 +98,20 @@ const LoginForm: React.FC = () => {
           </div>
         )}
       </Formik>
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={handleSnackbarClose}
+      >
+        <MuiAlert
+          elevation={6}
+          variant="filled"
+          onClose={handleSnackbarClose}
+          severity={snackbarSeverity}
+        >
+          {snackbarMessage}
+        </MuiAlert>
+      </Snackbar>
     </>
   );
 };
