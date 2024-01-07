@@ -72,7 +72,6 @@ const DetailsGrid: React.FC<DetailsGridProps> = ({ entityType }) => {
           sx={{
             borderBottom: "2px solid Gray",
             paddingBottom: 2,
-            marginBottom: 2,
             display: "flex",
             flexDirection: "column",
           }}
@@ -96,6 +95,7 @@ const DetailsGrid: React.FC<DetailsGridProps> = ({ entityType }) => {
           sx={{
             display: "flex",
             flexDirection: "column",
+            marginBottom:13
           }}
         >
           <Grid
@@ -128,6 +128,7 @@ const DetailsGrid: React.FC<DetailsGridProps> = ({ entityType }) => {
           sx={{
             display: "flex",
             flexDirection: "column",
+            marginBottom:13
           }}
         >
           <Grid

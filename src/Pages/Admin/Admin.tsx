@@ -13,7 +13,7 @@ const Admin: React.FC = () => {
   return (
     <div>
       <AdminNavBar onMenuItemClick={handleMenuItemClick} />
-      <Grid container spacing={1.5}>
+      <Grid container spacing={1.5} marginBottom={10}>
         {selectedMenuItem === "Cities" ||
         selectedMenuItem === "Hotels" ||
         selectedMenuItem === "Rooms" ? (

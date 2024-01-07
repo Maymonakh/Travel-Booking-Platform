@@ -108,6 +108,14 @@ const Navbar: React.FC = () => {
                 <Typography textAlign="center">{page}</Typography>
               </MenuItem>
             ))}
+            {isLoggedIn && (
+              <Button
+                onClick={handleLogout}
+                sx={{  color: "black", display: "block" ,marginLeft:1.5}}
+              >
+                Logout
+              </Button>
+            )}
           </Menu>
         </Box>
         <Typography
@@ -128,14 +136,7 @@ const Navbar: React.FC = () => {
         >
           SAFAR.com
         </Typography>
-        {isLoggedIn && (
-          <Button
-            onClick={handleLogout}
-            sx={{ my: 2, color: "black", display: "block" }}
-          >
-            Logout
-          </Button>
-        )}
+
         <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
           {pages.map((page) => (
             <Button

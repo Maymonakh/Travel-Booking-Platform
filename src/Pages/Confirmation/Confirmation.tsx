@@ -52,10 +52,11 @@ const Confirmation: React.FC = () => {
       <Container
         sx={{
           backgroundColor: "white",
-          marginTop: 1.5,
+          marginTop: 5,
           paddingTop: 5,
           paddingBottom: 2,
           borderRadius: 5,
+          marginBottom:10
         }}
       >
         <Typography variant="h4" marginBottom={7} paddingLeft={5}>

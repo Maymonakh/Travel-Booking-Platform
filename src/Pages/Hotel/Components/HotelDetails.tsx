@@ -49,9 +49,8 @@ const HotelDetails = () => {
     <Container
       sx={{
         backgroundColor: "white",
-        marginTop: 5,
         paddingTop: 3,
-        paddingBottom: 2,
+        paddingBottom: 5,
         borderRadius: 5,
       }}
     >

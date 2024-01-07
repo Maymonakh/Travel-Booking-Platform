@@ -25,7 +25,6 @@ const FeaturesDeals = () => {
     <Container
       sx={{
         backgroundColor: "white",
-        marginTop: 5,
         paddingTop: 5,
         paddingBottom: 2,
         borderRadius: 5,

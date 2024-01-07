@@ -27,7 +27,6 @@ const Trendingdestination = () => {
     <Container
       sx={{
         backgroundColor: "white",
-        marginTop: 5,
         padding: 5,
         borderRadius: 5,
       }}

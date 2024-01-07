@@ -11,7 +11,7 @@ const Home: React.FC = () => {
     <div className="container">
       <NavBar />
       <Searchbar />
-      <Grid container spacing={1.5}>
+      <Grid container spacing={1.5} marginBottom={10} marginTop={3}>
         <Grid item xs={12} md={4}>
           <Trendingdestination />
         </Grid>

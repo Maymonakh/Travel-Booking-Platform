@@ -28,7 +28,6 @@ const Filters = () => {
     <Container
       sx={{
         backgroundColor: "white",
-        marginTop: 1.5,
         paddingTop: 5,
         paddingBottom: 2,
         borderRadius: 5,

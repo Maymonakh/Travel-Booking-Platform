@@ -8,7 +8,7 @@ const Checkout: React.FC = () => {
   return (
     <div className="container">
       <NavBar />
-      <Grid item xs={12}>
+      <Grid item xs={12} marginBottom={10}>
         <BookedRooms/>
       </Grid>
     </div>

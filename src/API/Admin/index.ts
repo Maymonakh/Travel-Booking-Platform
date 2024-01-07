@@ -1,5 +1,5 @@
 import axios from "axios";
-import { CheckOutDate, checkInDate, hostURL } from "../constants";
+import { checkOutDate, checkInDate, hostURL } from "../constants";
 import { CreateCityProps, CreateHotelProps, CreateRoomProps} from "./types";
 
 
@@ -16,7 +16,7 @@ export const CityHotelsRequest = async (cityId:number | null ) => {
 };
 
 export const HotelRoomsRequest = async (hotelId:number | null ) => {
-  return await axios.get(`${hostURL}/api/hotels/${hotelId}/rooms/?checkInDate=${checkInDate}&CheckOutDate=${CheckOutDate}`);
+  return await axios.get(`${hostURL}/api/hotels/${hotelId}/rooms/?checkInDate=${checkInDate}&CheckOutDate=${checkOutDate}`);
 };
 
 export const addCity = async (cityData: CreateCityProps, token: string | null) => {
