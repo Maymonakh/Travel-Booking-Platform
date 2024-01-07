@@ -1,6 +1,5 @@
 # Final-Project
 
-
 <p align="center">
     <img src="https://user-images.githubusercontent.com/62269745/174906065-7bb63e14-879a-4740-849c-0821697aeec2.png#gh-light-mode-only" width="40%">
     <img src="https://user-images.githubusercontent.com/62269745/174906068-aad23112-20fe-4ec8-877f-3ee1d9ec0a69.png#gh-dark-mode-only" width="40%">
@@ -27,6 +26,43 @@ Welcome to our <strong>Travel and Accommodation Booking Platform!</strong> This 
 
 <hr>
 
+<h2>Pages </h2>
+
+<h4>Home Page : </h4>
+<p>
+Home page is designed to simplify your search process.Lets you easily find hotels, cities, and more. Featured Deals highlight special offers, and shows your recently visited hotels. Trending Destination Highlights provide inspiration for your next adventure.</p>
+<br>
+
+![Alt text](image.png)
+
+<br>
+
+![Alt text](image-4.png)
+
+<h4>Hotel Page : </h4>
+
+<p>Dive into the details of each hotel with our dedicated hotel pages. Galleries with high-quality images, and you can explore detailed information about the hotel, including its history and guest reviews. The room availability and selection feature makes booking a breeze.</p>
+
+<br>
+
+![Alt text](image-1.png)
+
+<h4>Checkout and Confirmation Pages : </h4>
+<p> Experience a secure and convenient checkout process. Provide your personal information and payment details in a user-friendly form. The confirmation page summarizes your booking details, allowing you to print or save the confirmation as a PDF for your records. </p>
+
+<br>
+![Alt text](image-2.png)
+<br>
+
+![Alt text](image-3.png)
+
+<h4>Admin Page for Easy Management : </h4>
+<p>For administrators, our platform offers a streamlined management experience. Navigate through functional left-side navigation, use the admin search bar, and access detailed grids for cities, hotels, and rooms. The creation and update forms make managing your inventory effortless.</p>
+
+<br>
+![Alt text](image-5.png)
+ 
+<hr>
 
 <h2>How to clone this project</h2>
 <ul>   
