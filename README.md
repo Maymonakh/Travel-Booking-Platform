@@ -51,6 +51,7 @@ Home page is designed to simplify your search process.Lets you easily find hotel
 <p> Experience a secure and convenient checkout process. Provide your personal information and payment details in a user-friendly form. The confirmation page summarizes your booking details, allowing you to print or save the confirmation as a PDF for your records. </p>
 
 <br>
+
 ![Alt text](image-2.png)
 <br>
 
@@ -60,6 +61,7 @@ Home page is designed to simplify your search process.Lets you easily find hotel
 <p>For administrators, our platform offers a streamlined management experience. Navigate through functional left-side navigation, use the admin search bar, and access detailed grids for cities, hotels, and rooms. The creation and update forms make managing your inventory effortless.</p>
 
 <br>
+
 ![Alt text](image-5.png)
  
 <hr>
