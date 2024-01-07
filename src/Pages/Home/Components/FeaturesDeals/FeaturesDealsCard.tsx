@@ -5,18 +5,17 @@ import { FeaturesDealsResponse } from "../../../../API/Home/types";
 
 const FeaturesDealsCard = ({ data }: { data: FeaturesDealsResponse }) => {
   return (
-    <Card>
+    <Card >
       <CardMedia
         component="img"
         alt={data.hotelName}
-        height="140"
+        height="160"
         image={data.roomPhotoUrl}
       />
       <CardContent>
         <div>
           <Typography variant="h6">{data.cityName}</Typography>
           <Typography variant="subtitle1">{data.hotelName}</Typography>
-          <Typography variant="body2">{data.title}</Typography>
         </div>
         <div>
           <Rating name="read-only" value={data.hotelStarRating} readOnly />

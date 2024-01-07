@@ -1,0 +1,9 @@
+:root{
+  --swiper-navigation-size:25px
+}
+
+.swiper-button-prev,
+.swiper-rtl .swiper-button-next {
+  left: var(--swiper-navigation-sides-offset, 0px);
+  right: 0;
+}

@@ -5,6 +5,7 @@ import Trendingcard from "./Trendingcard";
 import { trendingDestinationsRequest } from "../../../../API/Home";
 import { TrendingDestinationResponse } from "../../../../API/Home/types";
 
+
 const Trendingdestination = () => {
   const [DestinationsData, setDestinationsData] = useState<
     TrendingDestinationResponse[]
@@ -28,34 +29,27 @@ const Trendingdestination = () => {
       sx={{
         backgroundColor: "white",
         padding: 5,
+        paddingBottom:10,
         borderRadius: 5,
       }}
     >
       <Typography variant="h5" component="h2" gutterBottom sx={{ margin: 2 }}>
         Trending Destinations
       </Typography>
-      <Grid
-        container
-        spacing={2}
-        direction="row"
-        sx={{
-          maxHeight: 825,
-          overflowY: "scroll",
-          paddingInline: 2,
-        }}
-      >
         {DestinationsData.length === 0 ? (
           <Grid item xs={12} sx={{ display: "flex", justifyContent: "center" }}>
             <CircularProgress />
           </Grid>
         ) : (
           DestinationsData.map((destination, index) => (
-            <Grid item key={index} xs={12}>
-              <Trendingcard data={destination} />
-            </Grid>
+            index !== 0 && (
+              <Grid item key={index} xs={12}>
+                <Trendingcard data={destination} />
+              </Grid>
+            )
           ))
+          
         )}
-      </Grid>
     </Container>
   );
 };
