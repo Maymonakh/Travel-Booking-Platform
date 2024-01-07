@@ -9,6 +9,7 @@ import {
   MenuItem,
   Snackbar,
   SnackbarContent,
+  Grid,
 } from "@mui/material";
 import { addRoom } from "../../../../API/Admin";
 
@@ -28,9 +29,7 @@ const validationSchema = yup.object({
     .number()
     .required("Cost is required")
     .integer("Cost must be an integer"),
-  availability: yup
-    .string()
-    .required("Availability is required"),
+  availability: yup.string().required("Availability is required"),
   capacityOfAdults: yup
     .number()
     .required("Adult Capacity is required")
@@ -130,7 +129,8 @@ const CreateRoomForm: React.FC<CreateRoomFormProps> = ({
           margin="normal"
           {...formik.getFieldProps("capacityOfAdults")}
           error={
-            formik.touched.capacityOfAdults && Boolean(formik.errors.capacityOfAdults)
+            formik.touched.capacityOfAdults &&
+            Boolean(formik.errors.capacityOfAdults)
           }
           helperText={
             formik.touched.capacityOfAdults && formik.errors.capacityOfAdults
@@ -147,28 +147,31 @@ const CreateRoomForm: React.FC<CreateRoomFormProps> = ({
             Boolean(formik.errors.capacityOfChildren)
           }
           helperText={
-            formik.touched.capacityOfChildren && formik.errors.capacityOfChildren
+            formik.touched.capacityOfChildren &&
+            formik.errors.capacityOfChildren
           }
         />
-
-        <Button
-          type="submit"
-          variant="contained"
-          color="primary"
-          disabled={formik.isSubmitting}
-          sx={{ marginRight: 2 }}
-        >
-          {formik.isSubmitting ? <CircularProgress size={24} /> : "Create"}
-        </Button>
-        <Button variant="outlined" color="primary" onClick={onClose}>
-          Cancel
-        </Button>
+        <Grid marginTop={5}>
+          <Button
+            type="submit"
+            variant="contained"
+            color="primary"
+            disabled={formik.isSubmitting}
+            sx={{ marginRight: 2 }}
+          >
+            {formik.isSubmitting ? <CircularProgress size={24} /> : "Create"}
+          </Button>
+          <Button variant="outlined" color="primary" onClick={onClose}>
+            Cancel
+          </Button>
+        </Grid>
       </form>
       <Snackbar open={snackbarOpen} onClose={handleSnackbarClose}>
         <SnackbarContent
           message={snackbarMessage}
           sx={{
-            backgroundColor: snackbarSeverity === "success" ? "green" : "red",
+            backgroundColor:
+              snackbarSeverity === "success" ? "#03F94E" : "#F90A03",
           }}
         />
       </Snackbar>

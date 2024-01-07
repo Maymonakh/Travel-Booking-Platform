@@ -9,9 +9,9 @@ import {
   CircularProgress,
   Snackbar,
   SnackbarContent,
+  Grid,
 } from "@mui/material";
 import { addCity } from "../../../../API/Admin";
-
 
 interface CreateCityFormProps {
   onClose: () => void;
@@ -40,7 +40,7 @@ const CreateCityForm: React.FC<CreateCityFormProps> = ({
     onSubmit: async (values, { setSubmitting, resetForm }) => {
       try {
         const token = localStorage.getItem("authToken");
-        const response = await addCity(values,token);
+        const response = await addCity(values, token);
         console.log("City created successfully:", response.data);
         onCityCreate(response.data);
         setSnackbarMessage("City created successfully");
@@ -85,30 +85,32 @@ const CreateCityForm: React.FC<CreateCityFormProps> = ({
           margin="normal"
           {...formik.getFieldProps("description")}
           error={
-            formik.touched.description &&
-            Boolean(formik.errors.description)
+            formik.touched.description && Boolean(formik.errors.description)
           }
-          helperText={
-            formik.touched.description && formik.errors.description
-          }
+          helperText={formik.touched.description && formik.errors.description}
         />
-         <Button
-          type="submit"
-          variant="contained"
-          color="primary"
-          disabled={formik.isSubmitting}
-          sx={{ marginRight: 2 }}
-        >
-          {formik.isSubmitting ? <CircularProgress size={24} /> : "Create"}
-        </Button>
-        <Button variant="outlined" color="primary" onClick={onClose}>
-          Cancel
-        </Button>
+        <Grid marginTop={5}>
+          <Button
+            type="submit"
+            variant="contained"
+            color="primary"
+            disabled={formik.isSubmitting}
+            sx={{ marginRight: 2 }}
+          >
+            {formik.isSubmitting ? <CircularProgress size={24} /> : "Create"}
+          </Button>
+          <Button variant="outlined" color="primary" onClick={onClose}>
+            Cancel
+          </Button>
+        </Grid>
       </form>
       <Snackbar open={snackbarOpen} onClose={handleSnackbarClose}>
         <SnackbarContent
           message={snackbarMessage}
-          sx={{ backgroundColor: snackbarSeverity === "success" ? "green" : "red" }}
+          sx={{
+            backgroundColor:
+              snackbarSeverity === "success" ? "#03F94E" : "#F90A03",
+          }}
         />
       </Snackbar>
     </div>

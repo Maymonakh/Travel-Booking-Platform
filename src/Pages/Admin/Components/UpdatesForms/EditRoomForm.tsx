@@ -141,29 +141,31 @@ const EditRoomForm: React.FC<EditRoomFormProps> = ({
             Boolean(formik.errors.capacityOfChildren)
           }
         />
-
-        <Button
-          type="submit"
-          variant="contained"
-          color="primary"
-          disabled={formik.isSubmitting}
-          sx={{ marginRight: 2 }}
-        >
-          {formik.isSubmitting ? (
-            <CircularProgress size={24} />
-          ) : (
-            "Save Changes"
-          )}
-        </Button>
-        <Button variant="outlined" color="primary" onClick={onClose}>
-          Cancel
-        </Button>
+        <Grid marginTop={5}>
+          <Button
+            type="submit"
+            variant="contained"
+            color="primary"
+            disabled={formik.isSubmitting}
+            sx={{ marginRight: 2 }}
+          >
+            {formik.isSubmitting ? (
+              <CircularProgress size={24} />
+            ) : (
+              "Save Changes"
+            )}
+          </Button>
+          <Button variant="outlined" color="primary" onClick={onClose}>
+            Cancel
+          </Button>
+        </Grid>
       </form>
       <Snackbar open={snackbarOpen} onClose={handleSnackbarClose}>
         <SnackbarContent
           message={snackbarMessage}
           sx={{
-            backgroundColor: snackbarSeverity === "success" ? "green" : "red",
+            backgroundColor:
+              snackbarSeverity === "success" ? "#03F94E" : "#F90A03",
           }}
         />
       </Snackbar>

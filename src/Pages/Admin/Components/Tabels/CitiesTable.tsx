@@ -75,16 +75,14 @@ const CitiesTable: React.FC = () => {
 
   const handleCityCreate = (newCity: any) => {
     if (newCity && newCity.name) {
-      setCitiesData((prevCities) => [
-        ...prevCities,
-        { ...newCity },
-      ]);
+      setCitiesData((prevCities) => [...prevCities, { ...newCity }]);
       setCreating(false);
     } else {
-      console.error("Invalid city data. 'name' property is missing or undefined.");
+      console.error(
+        "Invalid city data. 'name' property is missing or undefined."
+      );
     }
   };
-  
 
   const handleCityDelete = (cityId: number) => {
     setDeletingCity(cityId);
@@ -94,20 +92,22 @@ const CitiesTable: React.FC = () => {
     try {
       if (deletingCity) {
         const token = localStorage.getItem("authToken");
-          await deleteCity(deletingCity, token);
-          setCitiesData((prevCities) =>
+        await deleteCity(deletingCity, token);
+        setCitiesData((prevCities) =>
           prevCities.filter((city) => city.id !== deletingCity)
         );
         setDeletingCity(null);
         handleClose();
         setSnackbarMessage("City deleted successfully");
         setSnackbarSeverity("success");
-        setSnackbarOpen(true);      }
+        setSnackbarOpen(true);
+      }
     } catch (error) {
       console.error("Error deleting city:", error);
       setSnackbarMessage("Something wrong");
       setSnackbarSeverity("error");
-      setSnackbarOpen(true);    }
+      setSnackbarOpen(true);
+    }
   };
 
   const handleCityEdit = (cityId: number) => {
@@ -175,22 +175,27 @@ const CitiesTable: React.FC = () => {
         </DialogActions>
       </Dialog>
 
-      <Drawer anchor="right" open={editingCity !== null} onClose={handleClose} sx={{ width: 50}}>
-      <DialogTitle>Edit City</DialogTitle>
-      <DialogContent>
-        <EditCityForm
-          onClose={handleClose}
-          onCityEdit={(editedCity) => {
-            setCitiesData((prevCities) =>
-              prevCities.map((city) =>
-                city.id === editingCity ? { ...city, ...editedCity } : city
-              )
-            );
-          }}
-          cityData={citiesData.find((city) => city.id === editingCity)}
-        />
-      </DialogContent>
-    </Drawer>
+      <Drawer
+        anchor="right"
+        open={editingCity !== null}
+        onClose={handleClose}
+        sx={{ width: 50 }}
+      >
+        <DialogTitle>Edit City</DialogTitle>
+        <DialogContent>
+          <EditCityForm
+            onClose={handleClose}
+            onCityEdit={(editedCity) => {
+              setCitiesData((prevCities) =>
+                prevCities.map((city) =>
+                  city.id === editingCity ? { ...city, ...editedCity } : city
+                )
+              );
+            }}
+            cityData={citiesData.find((city) => city.id === editingCity)}
+          />
+        </DialogContent>
+      </Drawer>
 
       <TableContainer component={Paper}>
         <Table>
@@ -238,10 +243,13 @@ const CitiesTable: React.FC = () => {
           </TableBody>
         </Table>
       </TableContainer>
-            <Snackbar open={snackbarOpen} onClose={handleSnackbarClose}>
+      <Snackbar open={snackbarOpen} onClose={handleSnackbarClose}>
         <SnackbarContent
           message={snackbarMessage}
-          sx={{ backgroundColor: snackbarSeverity === "success" ? "green" : "red" }}
+          sx={{
+            backgroundColor:
+              snackbarSeverity === "success" ? "#03F94E" : "#F90A03",
+          }}
         />
       </Snackbar>
     </Box>

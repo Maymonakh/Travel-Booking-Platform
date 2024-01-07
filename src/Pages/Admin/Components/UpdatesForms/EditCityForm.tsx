@@ -23,7 +23,11 @@ const validationSchema = yup.object({
   description: yup.string().required("Description is required"),
 });
 
-const EditCityForm: React.FC<EditCityFormProps> = ({ onClose, onCityEdit, cityData }) => {
+const EditCityForm: React.FC<EditCityFormProps> = ({
+  onClose,
+  onCityEdit,
+  cityData,
+}) => {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [snackbarSeverity, setSnackbarSeverity] = useState("success");
@@ -36,7 +40,7 @@ const EditCityForm: React.FC<EditCityFormProps> = ({ onClose, onCityEdit, cityDa
     onSubmit: async (values, { setSubmitting }) => {
       try {
         const token = localStorage.getItem("authToken");
-        await editCity(cityData.id, values,token); 
+        await editCity(cityData.id, values, token);
         console.log("City updated successfully:", values);
         onCityEdit(values);
         setSnackbarMessage("City updated successfully");
@@ -78,29 +82,36 @@ const EditCityForm: React.FC<EditCityFormProps> = ({ onClose, onCityEdit, cityDa
           fullWidth
           margin="normal"
           {...formik.getFieldProps("description")}
-          error={formik.touched.description && Boolean(formik.errors.description)}
+          error={
+            formik.touched.description && Boolean(formik.errors.description)
+          }
         />
-        <Button
-          type="submit"
-          variant="contained"
-          color="primary"
-          disabled={formik.isSubmitting}
-          sx={{ marginRight: 2 }}
-        >
-          {formik.isSubmitting ? (
-            <CircularProgress size={24} />
-          ) : (
-            "Save Changes"
-          )}
-        </Button>
-        <Button variant="outlined" color="primary" onClick={onClose}>
-          Cancel
-        </Button>
+        <Grid marginTop={5}>
+          <Button
+            type="submit"
+            variant="contained"
+            color="primary"
+            disabled={formik.isSubmitting}
+            sx={{ marginRight: 2 }}
+          >
+            {formik.isSubmitting ? (
+              <CircularProgress size={24} />
+            ) : (
+              "Save Changes"
+            )}
+          </Button>
+          <Button variant="outlined" color="primary" onClick={onClose}>
+            Cancel
+          </Button>
+        </Grid>
       </form>
       <Snackbar open={snackbarOpen} onClose={handleSnackbarClose}>
         <SnackbarContent
           message={snackbarMessage}
-          sx={{ backgroundColor: snackbarSeverity === "success" ? "green" : "red" }}
+          sx={{
+            backgroundColor:
+              snackbarSeverity === "success" ? "#03F94E" : "#F90A03",
+          }}
         />
       </Snackbar>
     </Grid>

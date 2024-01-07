@@ -257,7 +257,8 @@ const RoomsTable = ({
         <SnackbarContent
           message={snackbarMessage}
           sx={{
-            backgroundColor: snackbarSeverity === "success" ? "green" : "red",
+            backgroundColor:
+              snackbarSeverity === "success" ? "#03F94E" : "#F90A03",
           }}
         />
       </Snackbar>

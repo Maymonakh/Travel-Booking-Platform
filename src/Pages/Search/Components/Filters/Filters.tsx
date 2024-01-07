@@ -31,6 +31,7 @@ const Filters = () => {
         paddingTop: 5,
         paddingBottom: 2,
         borderRadius: 5,
+        height:600,
       }}
     >
       <Typography variant="h5" gutterBottom marginBottom={3}>
