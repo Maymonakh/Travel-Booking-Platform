@@ -20,19 +20,33 @@ import {
   DialogActions,
   Snackbar,
   SnackbarContent,
+  Drawer,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import SearchIcon from "@mui/icons-material/Search";
 import EditIcon from "@mui/icons-material/Edit";
 import CreateHotelForm from "../CreateForms/CreateHotelForm";
 import EditHotelForm from "../UpdatesForms/EditHotelForm";
-import { HotelsResponse } from "../../../../API/Admin/types";
-import { HotelsRequest, deleteHotel } from "../../../../API/Admin";
+import { CityHotelsResponse } from "../../../../API/Admin/types";
+import { deleteHotel } from "../../../../API/Admin";
 
-const HotelsTable: React.FC = () => {
+const HotelsTable = ({
+  hotelsData,
+  cityId,
+}: {
+  hotelsData: CityHotelsResponse[];
+  cityId: number;
+}) => {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [snackbarSeverity, setSnackbarSeverity] = useState("success");
+
+  const [hotels, setHotels] = useState(hotelsData);
+  useEffect(() => {
+    setHotels(hotelsData);
+  }, [hotelsData]);
+  console.log(hotels);
+  console.log(hotelsData);
 
   const handleSnackbarClose = () => {
     setSnackbarOpen(false);
@@ -44,19 +58,6 @@ const HotelsTable: React.FC = () => {
     month: "2-digit",
     year: "numeric",
   });
-  const [hotelsData, setHotelsData] = useState<HotelsResponse[]>([]);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await HotelsRequest();
-        setHotelsData(response.data);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-    fetchData();
-  }, []);
 
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [creating, setCreating] = useState<boolean>(false);
@@ -75,14 +76,14 @@ const HotelsTable: React.FC = () => {
 
   const handleHotelCreate = (newHotel: any) => {
     if (newHotel && newHotel.name) {
-      setHotelsData((prevHotels) => [
-      ...prevHotels,
-      { ...newHotel},
-    ]);
-    setCreating(false);
-  }else {
-    console.error("Invalid hotel data. 'name' property is missing or undefined.");
-  };}
+      setHotels((prevHotels) => [...prevHotels, { ...newHotel }]);
+      setCreating(false);
+    } else {
+      console.error(
+        "Invalid hotel data. 'name' property is missing or undefined."
+      );
+    }
+  };
 
   const handleHotelDelete = (hotelId: number) => {
     setDeletingHotel(hotelId);
@@ -92,27 +93,29 @@ const HotelsTable: React.FC = () => {
     try {
       if (deletingHotel) {
         const token = localStorage.getItem("authToken");
-          await deleteHotel(deletingHotel, token);
-          setHotelsData((prevHotels) =>
+        await deleteHotel(cityId, deletingHotel, token);
+        setHotels((prevHotels) =>
           prevHotels.filter((hotel) => hotel.id !== deletingHotel)
         );
         setDeletingHotel(null);
         handleClose();
         setSnackbarMessage("Hotel deleted successfully");
         setSnackbarSeverity("success");
-        setSnackbarOpen(true);      }
+        setSnackbarOpen(true);
+      }
     } catch (error) {
       console.error("Error deleting hotel:", error);
       setSnackbarMessage("Something wrong");
       setSnackbarSeverity("error");
-      setSnackbarOpen(true);    }
+      setSnackbarOpen(true);
+    }
   };
 
   const handleHotelEdit = (hotelId: number) => {
     setEditingHotel(hotelId);
   };
 
-  const filteredHotels = hotelsData.filter((hotel) => {
+  const filteredHotels = hotels.filter((hotel) => {
     const searchFields = [hotel.name];
     const normalizedSearchTerm = searchTerm.toLowerCase();
     return searchFields.some((field) =>
@@ -140,7 +143,7 @@ const HotelsTable: React.FC = () => {
             }}
           />
         </Grid>
-        <Grid xs={1} alignSelf={"center"} marginLeft={4}>
+        <Grid xs={1} alignSelf={"center"} marginLeft={2}>
           <Button variant="contained" onClick={handleCreateClick}>
             Create
           </Button>
@@ -152,6 +155,7 @@ const HotelsTable: React.FC = () => {
           <CreateHotelForm
             onClose={handleClose}
             onHotelCreate={handleHotelCreate}
+            cityId={cityId}
           />
         </DialogContent>
       </Dialog>
@@ -171,13 +175,18 @@ const HotelsTable: React.FC = () => {
           </Button>
         </DialogActions>
       </Dialog>
-      <Dialog open={editingHotel !== null} onClose={handleClose}>
+      <Drawer
+        anchor="right"
+        open={editingHotel !== null}
+        onClose={handleClose}
+        sx={{ width: 50 }}
+      >
         <DialogTitle>Edit Hotel</DialogTitle>
         <DialogContent>
           <EditHotelForm
             onClose={handleClose}
             onHotelEdit={(editedHotel) => {
-              setHotelsData((prevHotels) =>
+              setHotels((prevHotels) =>
                 prevHotels.map((hotel) =>
                   hotel.id === editingHotel
                     ? { ...hotel, ...editedHotel }
@@ -186,10 +195,11 @@ const HotelsTable: React.FC = () => {
               );
               setEditingHotel(null);
             }}
-            hotelData={hotelsData.find((hotel) => hotel.id === editingHotel)}
+            hotelData={hotels.find((hotel) => hotel.id === editingHotel)}
           />
         </DialogContent>
-      </Dialog>
+      </Drawer>
+
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
@@ -240,7 +250,9 @@ const HotelsTable: React.FC = () => {
       <Snackbar open={snackbarOpen} onClose={handleSnackbarClose}>
         <SnackbarContent
           message={snackbarMessage}
-          sx={{ backgroundColor: snackbarSeverity === "success" ? "green" : "red" }}
+          sx={{
+            backgroundColor: snackbarSeverity === "success" ? "green" : "red",
+          }}
         />
       </Snackbar>
     </Box>
