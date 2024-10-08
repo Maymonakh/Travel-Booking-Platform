@@ -71,8 +71,7 @@ Home page is designed to simplify your search process.Lets you easily find hotel
 <li> Above the list of files, click Code and copy the URL for the repository.</li>
  <li> Open Git Bash. </li>
  <li> Type git clone, and then paste the URL you copied earlier.</li>
- <li> Open it whit VSC and in backend directory</li>
- <li> Run --json-server --watch db.json --port 5000--</li>
+ <li> Open it with VSC </li>
  <li> Change directory to frontend by --cd frontend--</li>
  <li> Excute --npm start-- to start the projec</li>
 </ul>
